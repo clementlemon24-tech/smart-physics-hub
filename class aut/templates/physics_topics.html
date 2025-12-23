@@ -1,0 +1,169 @@
+{% extends "base.html" %}
+
+{% block title %}Physics Topics - Smart Physics Hub{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h1><i class="fas fa-atom"></i> Physics Topics</h1>
+        <p class="lead">Explore comprehensive physics topics with Engineer Clement Ekelemchi</p>
+    </div>
+</div>
+
+<div class="row">
+    {% for topic in topics %}
+    <div class="col-md-6 col-lg-4 mb-4">
+        <div class="card h-100 topic-card">
+            <div class="card-body text-center">
+                {% if loop.index == 1 %}
+                    <i class="fas fa-cog fa-3x text-primary mb-3"></i>
+                {% elif loop.index == 2 %}
+                    <i class="fas fa-bolt fa-3x text-warning mb-3"></i>
+                {% elif loop.index == 3 %}
+                    <i class="fas fa-wave-square fa-3x text-info mb-3"></i>
+                {% elif loop.index == 4 %}
+                    <i class="fas fa-thermometer-half fa-3x text-danger mb-3"></i>
+                {% elif loop.index == 5 %}
+                    <i class="fas fa-magnet fa-3x text-success mb-3"></i>
+                {% else %}
+                    <i class="fas fa-atom fa-3x text-secondary mb-3"></i>
+                {% endif %}
+                
+                <h5>{{ topic }}</h5>
+                <p class="text-muted">Comprehensive coverage with examples and practice questions</p>
+                
+                <div class="topic-actions">
+                    <button class="btn btn-primary btn-sm mb-2" onclick="startTopic('{{ topic }}')">
+                        <i class="fas fa-play"></i> Start Learning
+                    </button>
+                    <button class="btn btn-outline-success btn-sm mb-2" onclick="practiceQuestions('{{ topic }}')">
+                        <i class="fas fa-question"></i> Practice
+                    </button>
+                    <button class="btn btn-outline-info btn-sm mb-2" onclick="askAITutor('{{ topic }}')">
+                        <i class="fas fa-robot"></i> Ask AI
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Topic Details Modal -->
+<div class="modal fade" id="topicModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="topicModalTitle">Physics Topic</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="topicModalBody">
+                <!-- Content will be loaded here -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="goToClassroom()">
+                    <i class="fas fa-chalkboard-teacher"></i> Go to Classroom
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.topic-card {
+    transition: transform 0.2s ease-in-out;
+    cursor: pointer;
+}
+
+.topic-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.topic-actions .btn {
+    margin: 2px;
+    min-width: 100px;
+}
+</style>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function startTopic(topic) {
+    // Show topic details
+    document.getElementById('topicModalTitle').textContent = topic;
+    
+    const topicContent = {
+        "Newton's Laws of Motion": {
+            description: "Learn about the fundamental laws that govern motion and forces.",
+            concepts: ["First Law (Inertia)", "Second Law (F=ma)", "Third Law (Action-Reaction)"],
+            examples: ["Car braking", "Rocket propulsion", "Walking"],
+            formulas: ["F = ma", "a = F/m", "F₁ = -F₂"]
+        },
+        "Energy and Work": {
+            description: "Understand energy conservation and work-energy relationships.",
+            concepts: ["Kinetic Energy", "Potential Energy", "Work-Energy Theorem"],
+            examples: ["Roller coaster", "Pendulum", "Spring systems"],
+            formulas: ["KE = ½mv²", "PE = mgh", "W = F·d"]
+        },
+        "Wave Properties": {
+            description: "Explore wave behavior, interference, and wave equations.",
+            concepts: ["Wave Speed", "Frequency", "Wavelength", "Amplitude"],
+            examples: ["Sound waves", "Light waves", "Water waves"],
+            formulas: ["v = fλ", "T = 1/f", "f = v/λ"]
+        }
+    };
+    
+    const content = topicContent[topic] || {
+        description: "Comprehensive physics topic with theory and applications.",
+        concepts: ["Fundamental principles", "Mathematical relationships", "Real-world applications"],
+        examples: ["Practical examples", "Problem solving", "Laboratory experiments"],
+        formulas: ["Key equations", "Derived formulas", "Unit conversions"]
+    };
+    
+    document.getElementById('topicModalBody').innerHTML = `
+        <div class="topic-details">
+            <p class="lead">${content.description}</p>
+            
+            <h6><i class="fas fa-lightbulb"></i> Key Concepts:</h6>
+            <ul>
+                ${content.concepts.map(concept => `<li>${concept}</li>`).join('')}
+            </ul>
+            
+            <h6><i class="fas fa-examples"></i> Examples:</h6>
+            <ul>
+                ${content.examples.map(example => `<li>${example}</li>`).join('')}
+            </ul>
+            
+            <h6><i class="fas fa-calculator"></i> Important Formulas:</h6>
+            <ul>
+                ${content.formulas.map(formula => `<li><code>${formula}</code></li>`).join('')}
+            </ul>
+            
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle"></i> 
+                <strong>Ready to learn?</strong> Click "Go to Classroom" to start an interactive lesson with Engineer Clement Ekelemchi!
+            </div>
+        </div>
+    `;
+    
+    new bootstrap.Modal(document.getElementById('topicModal')).show();
+}
+
+function practiceQuestions(topic) {
+    // Redirect to practice page with topic filter
+    window.location.href = '/practice?topic=' + encodeURIComponent(topic);
+}
+
+function askAITutor(topic) {
+    // Redirect to AI tutor with pre-filled question
+    const question = `Explain ${topic} in detail with examples`;
+    window.location.href = '/tutor?question=' + encodeURIComponent(question);
+}
+
+function goToClassroom() {
+    window.location.href = '/classroom';
+}
+</script>
+{% endblock %}

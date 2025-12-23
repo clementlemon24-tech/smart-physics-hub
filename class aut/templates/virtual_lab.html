@@ -1,0 +1,967 @@
+{% extends "base.html" %}
+
+{% block title %}AI-Guided Virtual Physics Lab - Smart Physics Hub{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h1><i class="fas fa-flask"></i> AI-Guided Virtual Physics Lab</h1>
+        <p class="lead">Interactive Physics Experiments with Engineer Clement Ekelemchi</p>
+    </div>
+</div>
+
+<!-- Lab Instructor Panel -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card bg-gradient-primary text-white">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-md-2 text-center">
+                        <i class="fas fa-user-tie fa-4x"></i>
+                    </div>
+                    <div class="col-md-7">
+                        <h4><i class="fas fa-microscope"></i> Lab Instructor: Professor Clement Ekelemchi</h4>
+                        <p class="mb-0" id="instructor-message">Welcome to our virtual physics laboratory! Today we'll conduct experiments to understand projectile motion. I'll guide you through each step and help you analyze the results.</p>
+                    </div>
+                    <div class="col-md-3 text-end">
+                        <button class="btn btn-light btn-lg mb-2 d-block" onclick="startLabSession()">
+                            <i class="fas fa-play"></i> Start Lab Session
+                        </button>
+                        <button class="btn btn-outline-light d-block" onclick="generateLabReport()">
+                            <i class="fas fa-file-alt"></i> Generate Report
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Experiment Selection -->
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-list"></i> Available Experiments</h5>
+            </div>
+            <div class="card-body">
+                <div class="list-group">
+                    <button class="list-group-item list-group-item-action active" onclick="selectExperiment('projectile')">
+                        <i class="fas fa-rocket"></i> Projectile Motion
+                        <small class="d-block text-muted">Study angle vs range relationship</small>
+                    </button>
+                    <button class="list-group-item list-group-item-action" onclick="selectExperiment('pendulum')">
+                        <i class="fas fa-circle"></i> Simple Pendulum
+                        <small class="d-block text-muted">Period vs length analysis</small>
+                    </button>
+                    <button class="list-group-item list-group-item-action" onclick="selectExperiment('springs')">
+                        <i class="fas fa-arrows-alt-v"></i> Hooke's Law
+                        <small class="d-block text-muted">Force vs extension study</small>
+                    </button>
+                    <button class="list-group-item list-group-item-action" onclick="selectExperiment('waves')">
+                        <i class="fas fa-wave-square"></i> Wave Properties
+                        <small class="d-block text-muted">Frequency vs wavelength</small>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Virtual Lab Interface -->
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-microscope"></i> <span id="experiment-title">Projectile Motion Experiment</span></h5>
+            </div>
+            <div class="card-body">
+                <!-- Projectile Motion Lab -->
+                <div id="projectile-lab" class="lab-interface">
+                    <div class="lab-setup">
+                        <div class="cannon-container">
+                            <canvas id="projectile-canvas" width="600" height="300"></canvas>
+                        </div>
+                        
+                        <div class="controls mt-3">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label for="angle-slider" class="form-label">Launch Angle: <span id="angle-value">45°</span></label>
+                                    <input type="range" class="form-range" id="angle-slider" min="15" max="75" value="45" oninput="updateAngle(this.value)">
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="velocity-slider" class="form-label">Initial Velocity: <span id="velocity-value">20 m/s</span></label>
+                                    <input type="range" class="form-range" id="velocity-slider" min="10" max="50" value="20" oninput="updateVelocity(this.value)">
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="d-grid">
+                                        <button class="btn btn-success" onclick="launchProjectile()">
+                                            <i class="fas fa-rocket"></i> Launch
+                                        </button>
+                                        <button class="btn btn-warning mt-2" onclick="resetExperiment()">
+                                            <i class="fas fa-redo"></i> Reset
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Real-time Results -->
+                        <div class="results-panel mt-3">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="result-card">
+                                        <h6>Range</h6>
+                                        <span id="range-result">0 m</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="result-card">
+                                        <h6>Max Height</h6>
+                                        <span id="height-result">0 m</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="result-card">
+                                        <h6>Flight Time</h6>
+                                        <span id="time-result">0 s</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="result-card">
+                                        <h6>Trials</h6>
+                                        <span id="trial-count">0</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Other Lab Interfaces (Hidden Initially) -->
+                <div id="pendulum-lab" class="lab-interface" style="display: none;">
+                    <div class="text-center">
+                        <h5>Simple Pendulum Experiment</h5>
+                        <p>Coming soon - Study the relationship between pendulum length and period</p>
+                    </div>
+                </div>
+                
+                <div id="springs-lab" class="lab-interface" style="display: none;">
+                    <div class="text-center">
+                        <h5>Hooke's Law Experiment</h5>
+                        <p>Coming soon - Investigate force vs extension in springs</p>
+                    </div>
+                </div>
+                
+                <div id="waves-lab" class="lab-interface" style="display: none;">
+                    <div class="text-center">
+                        <h5>Wave Properties Experiment</h5>
+                        <p>Coming soon - Analyze wave frequency and wavelength relationships</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Data Collection and Analysis -->
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-chart-line"></i> Data Collection</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-sm" id="data-table">
+                        <thead>
+                            <tr>
+                                <th>Trial</th>
+                                <th>Angle (°)</th>
+                                <th>Velocity (m/s)</th>
+                                <th>Range (m)</th>
+                                <th>Max Height (m)</th>
+                                <th>Time (s)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="data-tbody">
+                            <!-- Data will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="mt-3">
+                    <button class="btn btn-primary btn-sm" onclick="exportData()">
+                        <i class="fas fa-download"></i> Export Data
+                    </button>
+                    <button class="btn btn-secondary btn-sm" onclick="clearData()">
+                        <i class="fas fa-trash"></i> Clear Data
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-chart-bar"></i> Real-time Analysis</h5>
+            </div>
+            <div class="card-body">
+                <canvas id="analysis-chart" width="400" height="200"></canvas>
+                <div class="mt-3">
+                    <div class="analysis-insights" id="analysis-insights">
+                        <h6>AI Analysis:</h6>
+                        <p class="text-muted">Conduct experiments to see real-time analysis and insights from Professor Clement Ekelemchi.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Lab Report Generation -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-file-alt"></i> Auto-Generated Lab Report</h5>
+            </div>
+            <div class="card-body">
+                <div id="lab-report" class="lab-report-content">
+                    <div class="text-center text-muted">
+                        <i class="fas fa-file-alt fa-3x mb-3"></i>
+                        <p>Complete your experiments to generate a comprehensive lab report</p>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <button class="btn btn-success" onclick="generateLabReport()" disabled id="generate-report-btn">
+                        <i class="fas fa-magic"></i> Generate Lab Report
+                    </button>
+                    <button class="btn btn-primary" onclick="downloadReport()" disabled id="download-report-btn">
+                        <i class="fas fa-download"></i> Download PDF
+                    </button>
+                    <button class="btn btn-info" onclick="shareReport()" disabled id="share-report-btn">
+                        <i class="fas fa-share"></i> Share Report
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.bg-gradient-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.lab-interface {
+    min-height: 400px;
+}
+
+.cannon-container {
+    background: linear-gradient(to bottom, #87CEEB 0%, #98FB98 70%, #8B4513 100%);
+    border-radius: 10px;
+    padding: 20px;
+    position: relative;
+}
+
+#projectile-canvas {
+    border: 2px solid #333;
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.1);
+    width: 100%;
+    height: 300px;
+}
+
+.result-card {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 15px;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.result-card h6 {
+    color: #6c757d;
+    font-size: 12px;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+}
+
+.result-card span {
+    font-size: 18px;
+    font-weight: bold;
+    color: #495057;
+}
+
+.lab-report-content {
+    min-height: 300px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 20px;
+}
+
+.instructor-speaking {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.analysis-insights {
+    background: #e3f2fd;
+    border-left: 4px solid #2196f3;
+    padding: 15px;
+    border-radius: 5px;
+}
+
+.data-highlight {
+    background-color: #fff3cd !important;
+    animation: highlight 2s ease-in-out;
+}
+
+@keyframes highlight {
+    0% { background-color: #fff3cd; }
+    100% { background-color: transparent; }
+}
+</style>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+// Lab Variables
+let currentExperiment = 'projectile';
+let labData = [];
+let trialCount = 0;
+let isLabActive = false;
+let analysisChart = null;
+
+// Physics Constants
+const g = 9.81; // gravity (m/s²)
+
+// Canvas and Animation
+let canvas, ctx;
+let projectile = null;
+let animationId = null;
+
+// Lab Session Management
+function startLabSession() {
+    isLabActive = true;
+    speakInstructor("Welcome to our physics laboratory! I'm Professor Clement Ekelemchi, your lab instructor. Today we'll investigate projectile motion. Let's start by understanding how launch angle affects the range of a projectile. Adjust the angle and observe what happens!");
+    
+    document.querySelector('.btn-light').innerHTML = '<i class="fas fa-pause"></i> Lab in Session';
+    document.querySelector('.btn-light').disabled = true;
+    
+    initializeCanvas();
+    updateInstructorMessage("Lab session started! Adjust the launch angle and click 'Launch' to begin collecting data.");
+}
+
+function initializeCanvas() {
+    canvas = document.getElementById('projectile-canvas');
+    ctx = canvas.getContext('2d');
+    
+    // Set canvas size
+    canvas.width = 600;
+    canvas.height = 300;
+    
+    drawLabSetup();
+}
+
+function drawLabSetup() {
+    if (!ctx) return;
+    
+    // Clear canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    // Draw ground
+    ctx.fillStyle = '#8B4513';
+    ctx.fillRect(0, canvas.height - 30, canvas.width, 30);
+    
+    // Draw cannon
+    ctx.fillStyle = '#333';
+    ctx.fillRect(20, canvas.height - 60, 40, 30);
+    
+    // Draw cannon barrel
+    const angle = document.getElementById('angle-slider').value * Math.PI / 180;
+    ctx.save();
+    ctx.translate(40, canvas.height - 45);
+    ctx.rotate(-angle);
+    ctx.fillRect(0, -5, 30, 10);
+    ctx.restore();
+    
+    // Draw grid
+    ctx.strokeStyle = '#ddd';
+    ctx.lineWidth = 1;
+    for (let i = 0; i < canvas.width; i += 50) {
+        ctx.beginPath();
+        ctx.moveTo(i, 0);
+        ctx.lineTo(i, canvas.height - 30);
+        ctx.stroke();
+    }
+    for (let i = 0; i < canvas.height - 30; i += 25) {
+        ctx.beginPath();
+        ctx.moveTo(0, i);
+        ctx.lineTo(canvas.width, i);
+        ctx.stroke();
+    }
+    
+    // Draw scale labels
+    ctx.fillStyle = '#666';
+    ctx.font = '10px Arial';
+    for (let i = 0; i < canvas.width; i += 100) {
+        ctx.fillText(i/10 + 'm', i + 5, canvas.height - 10);
+    }
+}
+
+function updateAngle(value) {
+    document.getElementById('angle-value').textContent = value + '°';
+    drawLabSetup();
+    
+    if (isLabActive && trialCount > 0) {
+        speakInstructor(`Good! You've changed the angle to ${value} degrees. Notice how this will affect the trajectory. What do you predict will happen to the range?`);
+    }
+}
+
+function updateVelocity(value) {
+    document.getElementById('velocity-value').textContent = value + ' m/s';
+    
+    if (isLabActive && trialCount > 0) {
+        speakInstructor(`You've adjusted the initial velocity to ${value} meters per second. This will change both the range and flight time.`);
+    }
+}
+
+function launchProjectile() {
+    if (!isLabActive) {
+        alert('Please start the lab session first!');
+        return;
+    }
+    
+    const angle = parseFloat(document.getElementById('angle-slider').value);
+    const velocity = parseFloat(document.getElementById('velocity-slider').value);
+    
+    // Calculate projectile motion
+    const results = calculateProjectileMotion(angle, velocity);
+    
+    // Animate projectile
+    animateProjectile(angle, velocity, results);
+    
+    // Record data
+    recordData(angle, velocity, results);
+    
+    // Update trial count
+    trialCount++;
+    document.getElementById('trial-count').textContent = trialCount;
+    
+    // Instructor feedback
+    provideInstructorFeedback(angle, velocity, results);
+    
+    // Enable report generation after 3 trials
+    if (trialCount >= 3) {
+        document.getElementById('generate-report-btn').disabled = false;
+    }
+}
+
+function calculateProjectileMotion(angleDeg, velocity) {
+    const angle = angleDeg * Math.PI / 180;
+    const vx = velocity * Math.cos(angle);
+    const vy = velocity * Math.sin(angle);
+    
+    const timeOfFlight = (2 * vy) / g;
+    const range = vx * timeOfFlight;
+    const maxHeight = (vy * vy) / (2 * g);
+    
+    return {
+        range: range,
+        maxHeight: maxHeight,
+        timeOfFlight: timeOfFlight,
+        vx: vx,
+        vy: vy
+    };
+}
+
+function animateProjectile(angleDeg, velocity, results) {
+    if (animationId) {
+        cancelAnimationFrame(animationId);
+    }
+    
+    const angle = angleDeg * Math.PI / 180;
+    const startTime = Date.now();
+    const duration = results.timeOfFlight * 1000; // Convert to milliseconds
+    
+    function animate() {
+        const elapsed = Date.now() - startTime;
+        const t = Math.min(elapsed / duration, 1);
+        
+        if (t >= 1) {
+            // Animation complete
+            updateResults(results);
+            return;
+        }
+        
+        // Clear and redraw setup
+        drawLabSetup();
+        
+        // Calculate current position
+        const currentTime = t * results.timeOfFlight;
+        const x = 60 + results.vx * currentTime * 10; // Scale for canvas
+        const y = canvas.height - 45 - (results.vy * currentTime - 0.5 * g * currentTime * currentTime) * 10;
+        
+        // Draw trajectory trail
+        ctx.strokeStyle = '#ff6b6b';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        for (let i = 0; i <= t; i += 0.01) {
+            const trailTime = i * results.timeOfFlight;
+            const trailX = 60 + results.vx * trailTime * 10;
+            const trailY = canvas.height - 45 - (results.vy * trailTime - 0.5 * g * trailTime * trailTime) * 10;
+            
+            if (i === 0) {
+                ctx.moveTo(trailX, trailY);
+            } else {
+                ctx.lineTo(trailX, trailY);
+            }
+        }
+        ctx.stroke();
+        
+        // Draw projectile
+        ctx.fillStyle = '#ff6b6b';
+        ctx.beginPath();
+        ctx.arc(x, y, 5, 0, 2 * Math.PI);
+        ctx.fill();
+        
+        // Draw velocity vector
+        ctx.strokeStyle = '#4ecdc4';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        const currentVx = results.vx;
+        const currentVy = results.vy - g * currentTime;
+        ctx.lineTo(x + currentVx * 2, y - currentVy * 2);
+        ctx.stroke();
+        
+        animationId = requestAnimationFrame(animate);
+    }
+    
+    animate();
+}
+
+function updateResults(results) {
+    document.getElementById('range-result').textContent = results.range.toFixed(1) + ' m';
+    document.getElementById('height-result').textContent = results.maxHeight.toFixed(1) + ' m';
+    document.getElementById('time-result').textContent = results.timeOfFlight.toFixed(1) + ' s';
+}
+
+function recordData(angle, velocity, results) {
+    const dataPoint = {
+        trial: trialCount + 1,
+        angle: angle,
+        velocity: velocity,
+        range: results.range,
+        maxHeight: results.maxHeight,
+        timeOfFlight: results.timeOfFlight,
+        timestamp: new Date()
+    };
+    
+    labData.push(dataPoint);
+    
+    // Add to table
+    const tbody = document.getElementById('data-tbody');
+    const row = tbody.insertRow();
+    row.innerHTML = `
+        <td>${dataPoint.trial}</td>
+        <td>${dataPoint.angle.toFixed(1)}</td>
+        <td>${dataPoint.velocity.toFixed(1)}</td>
+        <td>${dataPoint.range.toFixed(1)}</td>
+        <td>${dataPoint.maxHeight.toFixed(1)}</td>
+        <td>${dataPoint.timeOfFlight.toFixed(1)}</td>
+    `;
+    
+    // Highlight new row
+    row.classList.add('data-highlight');
+    
+    // Update analysis chart
+    updateAnalysisChart();
+    
+    // Provide AI analysis
+    provideAIAnalysis();
+}
+
+function provideInstructorFeedback(angle, velocity, results) {
+    let feedback = "";
+    
+    if (trialCount === 0) {
+        feedback = `Excellent first launch! At ${angle}° with ${velocity} m/s initial velocity, you achieved a range of ${results.range.toFixed(1)} meters. Notice the parabolic trajectory - this is characteristic of projectile motion under gravity.`;
+    } else {
+        const previousData = labData[labData.length - 2];
+        if (previousData) {
+            const rangeChange = results.range - previousData.range;
+            const angleChange = angle - previousData.angle;
+            
+            if (angleChange > 0 && rangeChange > 0) {
+                feedback = `Good observation! Increasing the angle from ${previousData.angle}° to ${angle}° increased the range by ${rangeChange.toFixed(1)} meters. But remember, there's an optimal angle for maximum range!`;
+            } else if (angleChange > 0 && rangeChange < 0) {
+                feedback = `Interesting! You increased the angle but the range decreased. This shows that angles greater than 45° actually reduce the range. The optimal angle for maximum range is 45° in a vacuum.`;
+            } else if (angleChange < 0 && rangeChange > 0) {
+                feedback = `Excellent! Decreasing the angle from ${previousData.angle}° to ${angle}° increased the range. You're discovering that lower angles can be more effective for range, up to the optimal 45°.`;
+            }
+        }
+    }
+    
+    speakInstructor(feedback);
+    updateInstructorMessage(feedback);
+}
+
+function updateAnalysisChart() {
+    const ctx = document.getElementById('analysis-chart').getContext('2d');
+    
+    if (analysisChart) {
+        analysisChart.destroy();
+    }
+    
+    analysisChart = new Chart(ctx, {
+        type: 'scatter',
+        data: {
+            datasets: [{
+                label: 'Range vs Angle',
+                data: labData.map(d => ({x: d.angle, y: d.range})),
+                backgroundColor: 'rgba(255, 107, 107, 0.6)',
+                borderColor: 'rgba(255, 107, 107, 1)',
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Launch Angle (degrees)'
+                    }
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: 'Range (meters)'
+                    }
+                }
+            },
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Projectile Range vs Launch Angle'
+                }
+            }
+        }
+    });
+}
+
+function provideAIAnalysis() {
+    if (labData.length < 2) return;
+    
+    const insights = document.getElementById('analysis-insights');
+    let analysis = "<h6>AI Analysis by Professor Clement Ekelemchi:</h6>";
+    
+    // Find optimal angle data
+    const maxRange = Math.max(...labData.map(d => d.range));
+    const optimalData = labData.find(d => d.range === maxRange);
+    
+    if (labData.length >= 3) {
+        analysis += `<p><strong>Key Findings:</strong></p>`;
+        analysis += `<ul>`;
+        analysis += `<li>Maximum range achieved: ${maxRange.toFixed(1)}m at ${optimalData.angle}° angle</li>`;
+        
+        // Analyze trend
+        const angles = labData.map(d => d.angle).sort((a, b) => a - b);
+        const ranges = angles.map(angle => {
+            const data = labData.find(d => d.angle === angle);
+            return data ? data.range : 0;
+        });
+        
+        if (ranges.length >= 3) {
+            const trend = ranges[ranges.length - 1] > ranges[0] ? "increasing" : "decreasing";
+            analysis += `<li>Range trend: ${trend} as angle changes</li>`;
+        }
+        
+        analysis += `<li>Theoretical optimal angle: 45° (for maximum range in vacuum)</li>`;
+        analysis += `</ul>`;
+        
+        analysis += `<p><strong>Physics Insight:</strong> The range of a projectile is given by R = (v²sin(2θ))/g. This equation shows that maximum range occurs at θ = 45°, where sin(2θ) = 1.</p>`;
+    } else {
+        analysis += `<p>Continue experimenting with different angles to see the relationship between launch angle and range. Try angles both above and below 45° to find the optimal angle!</p>`;
+    }
+    
+    insights.innerHTML = analysis;
+}
+
+function resetExperiment() {
+    if (animationId) {
+        cancelAnimationFrame(animationId);
+    }
+    drawLabSetup();
+    updateResults({range: 0, maxHeight: 0, timeOfFlight: 0});
+}
+
+function selectExperiment(experiment) {
+    // Hide all lab interfaces
+    document.querySelectorAll('.lab-interface').forEach(lab => {
+        lab.style.display = 'none';
+    });
+    
+    // Show selected lab
+    document.getElementById(experiment + '-lab').style.display = 'block';
+    
+    // Update active button
+    document.querySelectorAll('.list-group-item').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    event.target.classList.add('active');
+    
+    // Update experiment title
+    const titles = {
+        'projectile': 'Projectile Motion Experiment',
+        'pendulum': 'Simple Pendulum Experiment',
+        'springs': 'Hooke\'s Law Experiment',
+        'waves': 'Wave Properties Experiment'
+    };
+    
+    document.getElementById('experiment-title').textContent = titles[experiment];
+    currentExperiment = experiment;
+    
+    // Reset data for new experiment
+    labData = [];
+    trialCount = 0;
+    document.getElementById('data-tbody').innerHTML = '';
+    document.getElementById('trial-count').textContent = '0';
+    
+    if (experiment === 'projectile') {
+        initializeCanvas();
+    }
+}
+
+function generateLabReport() {
+    if (labData.length < 3) {
+        alert('Please conduct at least 3 trials before generating a report.');
+        return;
+    }
+    
+    const reportContent = document.getElementById('lab-report');
+    const report = generateProjectileMotionReport();
+    
+    reportContent.innerHTML = report;
+    
+    // Enable download and share buttons
+    document.getElementById('download-report-btn').disabled = false;
+    document.getElementById('share-report-btn').disabled = false;
+    
+    speakInstructor("Excellent work! I've generated a comprehensive lab report based on your experimental data. The report includes your methodology, results, analysis, and conclusions. This follows standard scientific reporting format used in universities and research institutions.");
+}
+
+function generateProjectileMotionReport() {
+    const date = new Date().toLocaleDateString();
+    const maxRange = Math.max(...labData.map(d => d.range));
+    const optimalData = labData.find(d => d.range === maxRange);
+    const avgRange = labData.reduce((sum, d) => sum + d.range, 0) / labData.length;
+    
+    return `
+        <div class="lab-report">
+            <div class="report-header text-center mb-4">
+                <h3>Physics Laboratory Report</h3>
+                <h4>Projectile Motion: Angle vs Range Analysis</h4>
+                <p><strong>Date:</strong> ${date}</p>
+                <p><strong>Lab Instructor:</strong> Professor Clement Ekelemchi</p>
+                <p><strong>Student:</strong> Physics Student</p>
+            </div>
+            
+            <div class="report-section">
+                <h5>1. Objective</h5>
+                <p>To investigate the relationship between launch angle and horizontal range in projectile motion, and to determine the optimal angle for maximum range.</p>
+            </div>
+            
+            <div class="report-section">
+                <h5>2. Theory</h5>
+                <p>For projectile motion, the horizontal range R is given by:</p>
+                <p class="text-center"><strong>R = (v₀²sin(2θ))/g</strong></p>
+                <p>Where v₀ is initial velocity, θ is launch angle, and g is gravitational acceleration (9.81 m/s²).</p>
+                <p>The maximum range occurs when sin(2θ) = 1, which gives θ = 45°.</p>
+            </div>
+            
+            <div class="report-section">
+                <h5>3. Methodology</h5>
+                <p>Using the virtual physics laboratory, projectiles were launched at various angles while keeping initial velocity constant. The following parameters were measured:</p>
+                <ul>
+                    <li>Launch angle (θ)</li>
+                    <li>Initial velocity (v₀)</li>
+                    <li>Horizontal range (R)</li>
+                    <li>Maximum height (h)</li>
+                    <li>Time of flight (t)</li>
+                </ul>
+            </div>
+            
+            <div class="report-section">
+                <h5>4. Results</h5>
+                <p><strong>Number of trials:</strong> ${labData.length}</p>
+                <p><strong>Maximum range achieved:</strong> ${maxRange.toFixed(2)} m at ${optimalData.angle}° angle</p>
+                <p><strong>Average range:</strong> ${avgRange.toFixed(2)} m</p>
+                
+                <div class="table-responsive mt-3">
+                    <table class="table table-bordered">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Trial</th>
+                                <th>Angle (°)</th>
+                                <th>Velocity (m/s)</th>
+                                <th>Range (m)</th>
+                                <th>Max Height (m)</th>
+                                <th>Time (s)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${labData.map(d => `
+                                <tr>
+                                    <td>${d.trial}</td>
+                                    <td>${d.angle.toFixed(1)}</td>
+                                    <td>${d.velocity.toFixed(1)}</td>
+                                    <td>${d.range.toFixed(2)}</td>
+                                    <td>${d.maxHeight.toFixed(2)}</td>
+                                    <td>${d.timeOfFlight.toFixed(2)}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="report-section">
+                <h5>5. Analysis</h5>
+                <p>The experimental data shows that:</p>
+                <ul>
+                    <li>Range varies with launch angle as predicted by theory</li>
+                    <li>The optimal angle for maximum range was approximately ${optimalData.angle}°</li>
+                    <li>This is ${Math.abs(optimalData.angle - 45).toFixed(1)}° ${optimalData.angle > 45 ? 'above' : 'below'} the theoretical optimum of 45°</li>
+                    <li>The relationship follows the expected sin(2θ) dependence</li>
+                </ul>
+            </div>
+            
+            <div class="report-section">
+                <h5>6. Conclusions</h5>
+                <p>The experiment successfully demonstrated the relationship between launch angle and projectile range. The results confirm that:</p>
+                <ol>
+                    <li>There exists an optimal angle for maximum range</li>
+                    <li>Angles both above and below the optimum result in reduced range</li>
+                    <li>The experimental optimum closely matches the theoretical prediction of 45°</li>
+                </ol>
+                <p>Small deviations from the theoretical optimum may be due to air resistance effects or measurement precision in the virtual environment.</p>
+            </div>
+            
+            <div class="report-section">
+                <h5>7. Applications</h5>
+                <p>Understanding projectile motion is crucial in:</p>
+                <ul>
+                    <li>Sports (basketball, football, javelin throw)</li>
+                    <li>Military ballistics</li>
+                    <li>Space mission trajectory planning</li>
+                    <li>Engineering design of fountains and water features</li>
+                </ul>
+            </div>
+            
+            <div class="report-footer mt-4">
+                <p><em>Report generated by AI Lab Assistant - Professor Clement Ekelemchi</em></p>
+                <p><em>Smart Physics Hub Virtual Laboratory</em></p>
+            </div>
+        </div>
+    `;
+}
+
+function exportData() {
+    const csvContent = "data:text/csv;charset=utf-8," 
+        + "Trial,Angle(°),Velocity(m/s),Range(m),MaxHeight(m),Time(s)\n"
+        + labData.map(d => `${d.trial},${d.angle},${d.velocity},${d.range.toFixed(2)},${d.maxHeight.toFixed(2)},${d.timeOfFlight.toFixed(2)}`).join("\n");
+    
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "projectile_motion_data.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
+function clearData() {
+    if (confirm('Are you sure you want to clear all experimental data?')) {
+        labData = [];
+        trialCount = 0;
+        document.getElementById('data-tbody').innerHTML = '';
+        document.getElementById('trial-count').textContent = '0';
+        
+        if (analysisChart) {
+            analysisChart.destroy();
+            analysisChart = null;
+        }
+        
+        document.getElementById('analysis-insights').innerHTML = `
+            <h6>AI Analysis:</h6>
+            <p class="text-muted">Conduct experiments to see real-time analysis and insights from Professor Clement Ekelemchi.</p>
+        `;
+        
+        document.getElementById('generate-report-btn').disabled = true;
+        document.getElementById('download-report-btn').disabled = true;
+        document.getElementById('share-report-btn').disabled = true;
+    }
+}
+
+function downloadReport() {
+    // In a real implementation, this would generate a PDF
+    alert('PDF download functionality would be implemented here using libraries like jsPDF or server-side PDF generation.');
+}
+
+function shareReport() {
+    // In a real implementation, this would share the report
+    alert('Report sharing functionality would be implemented here (email, cloud storage, etc.).');
+}
+
+// Voice synthesis for instructor
+function speakInstructor(text) {
+    if ('speechSynthesis' in window) {
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.rate = 0.8;
+        utterance.pitch = 0.7; // Deep male voice
+        utterance.volume = 0.9;
+        
+        // Try to use a male voice
+        const voices = speechSynthesis.getVoices();
+        const maleVoice = voices.find(voice => 
+            voice.name.toLowerCase().includes('male') || 
+            voice.name.toLowerCase().includes('david') ||
+            voice.name.toLowerCase().includes('mark')
+        );
+        
+        if (maleVoice) {
+            utterance.voice = maleVoice;
+        }
+        
+        // Add visual feedback
+        const instructor = document.querySelector('.fa-user-tie');
+        instructor.classList.add('instructor-speaking');
+        
+        utterance.onend = () => {
+            instructor.classList.remove('instructor-speaking');
+        };
+        
+        speechSynthesis.speak(utterance);
+    }
+}
+
+function updateInstructorMessage(message) {
+    document.getElementById('instructor-message').textContent = message;
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize with projectile motion experiment
+    selectExperiment('projectile');
+});
+</script>
+{% endblock %}

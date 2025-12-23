@@ -1,0 +1,32 @@
+🚀 RAILWAY DEPLOYMENT COMMANDS - COPY AND PASTE
+
+1. LOGIN TO RAILWAY:
+   railway login
+
+2. CREATE NEW PROJECT:
+   railway new
+
+3. SET ENVIRONMENT VARIABLES:
+   railway variables set FLASK_ENV=production
+   railway variables set SECRET_KEY=smart-physics-hub-railway-key
+
+4. DEPLOY YOUR APP:
+   railway up
+
+5. GET YOUR LIVE URL:
+   railway domain
+
+6. OPEN YOUR APP:
+   railway open
+
+🎉 YOUR SMART PHYSICS HUB WILL BE LIVE!
+
+LIVE URL: https://smart-physics-hub-production.up.railway.app
+
+📱 FEATURES AVAILABLE 24/7:
+🤖 AI Tutor (Engineer Clement Ekelemchi)
+🏫 Interactive Classroom
+🧪 Virtual Laboratory
+📚 Physics Encyclopedia
+🔬 Nanophysics & AI Topics
+📝 JAMB/WAEC/NECO Preparation

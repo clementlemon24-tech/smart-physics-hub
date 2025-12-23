@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}Physics Lessons - Smart Physics Hub{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h1><i class="fas fa-book"></i> Physics Lessons</h1>
+        <p class="lead">Comprehensive physics curriculum for JAMB preparation</p>
+    </div>
+</div>
+
+<div class="row">
+    {% for category, lesson_list in lessons.items() %}
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h5><i class="fas fa-atom"></i> {{ category.title() }}</h5>
+            </div>
+            <div class="card-body">
+                <ul class="list-group list-group-flush">
+                    {% for lesson in lesson_list %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong>{{ lesson.replace('_', ' ').title() }}</strong>
+                            <br><small class="text-muted">Interactive lesson with examples and practice</small>
+                        </div>
+                        <div>
+                            <a href="{{ url_for('start_lesson', category=category, lesson=lesson) }}" 
+                               class="btn btn-primary btn-sm me-2">
+                                <i class="fas fa-play"></i> Start Lesson
+                            </a>
+                            <span class="badge bg-success rounded-pill">Available</span>
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<div class="row mt-4">
+    <div class="col-12 text-center">
+        <a href="{{ url_for('classroom') }}" class="btn btn-primary btn-lg">
+            <i class="fas fa-chalkboard-teacher"></i> Start Learning in Classroom
+        </a>
+    </div>
+</div>
+{% endblock %}

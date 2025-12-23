@@ -1,0 +1,54 @@
+{
+  "name": "Smart Physics Hub",
+  "description": "AI-powered physics learning platform with Engineer Clement Ekelemchi - Interactive classroom, virtual lab, and comprehensive physics encyclopedia",
+  "repository": "https://github.com/yourusername/smart-physics-hub",
+  "template": {
+    "name": "Smart Physics Hub",
+    "description": "Complete physics learning platform with AI tutor, virtual laboratory, and JAMB/WAEC/NECO preparation",
+    "tags": ["physics", "education", "ai-tutor", "flask", "python", "jamb", "waec", "neco", "learning", "virtual-lab"],
+    "logo": "https://cdn-icons-png.flaticon.com/512/3003/3003984.png",
+    "website": "https://smart-physics-hub.railway.app",
+    "category": "Education"
+  },
+  "services": [
+    {
+      "name": "smart-physics-hub",
+      "source": {
+        "type": "github",
+        "repo": "yourusername/smart-physics-hub",
+        "branch": "main"
+      },
+      "build": {
+        "builder": "NIXPACKS",
+        "buildCommand": "pip install -r requirements.txt"
+      },
+      "deploy": {
+        "startCommand": "python main.py",
+        "restartPolicyType": "ON_FAILURE",
+        "restartPolicyMaxRetries": 10,
+        "healthcheckPath": "/",
+        "healthcheckTimeout": 300
+      },
+      "env": {
+        "FLASK_ENV": "production",
+        "SECRET_KEY": "smart-physics-hub-railway-production-key",
+        "PORT": "${{ PORT }}"
+      },
+      "domains": [
+        {
+          "name": "smart-physics-hub.railway.app"
+        }
+      ]
+    }
+  ],
+  "variables": {
+    "FLASK_ENV": {
+      "description": "Flask environment",
+      "default": "production"
+    },
+    "SECRET_KEY": {
+      "description": "Secret key for Flask application",
+      "default": "smart-physics-hub-railway-production-key"
+    }
+  }
+}

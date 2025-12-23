@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Deploy Smart Physics Hub</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .deploy-card {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            max-width: 500px;
+        }
+        .deploy-btn {
+            background: linear-gradient(45deg, #28a745, #20c997);
+            color: white;
+            padding: 20px 40px;
+            font-size: 20px;
+            font-weight: bold;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(40, 167, 69, 0.4);
+        }
+        .deploy-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(40, 167, 69, 0.6);
+        }
+        h1 { color: #333; margin-bottom: 20px; }
+        p { color: #666; margin-bottom: 30px; }
+        .features {
+            text-align: left;
+            margin: 20px 0;
+            color: #555;
+        }
+        .url {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-family: monospace;
+            color: #28a745;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="deploy-card">
+        <h1>🚀 Smart Physics Hub</h1>
+        <p>Deploy your AI-powered physics learning platform to Railway in 2 minutes!</p>
+        
+        <div class="features">
+            <strong>Features:</strong><br>
+            🤖 AI Tutor (Engineer Clement Ekelemchi)<br>
+            🏫 Interactive Classroom<br>
+            🧪 Virtual Laboratory<br>
+            📚 Physics Encyclopedia<br>
+            🔬 Nanophysics & AI Topics<br>
+            📝 JAMB/WAEC/NECO Preparation
+        </div>
+        
+        <a href="https://railway.app/new" class="deploy-btn" target="_blank">
+            DEPLOY TO RAILWAY
+        </a>
+        
+        <div class="url">
+            Your live URL: https://smart-physics-hub.up.railway.app
+        </div>
+        
+        <p><small>Free deployment • No credit card required • Live in 2 minutes</small></p>
+    </div>
+    
+    <script>
+        // Auto-redirect after 10 seconds
+        setTimeout(() => {
+            if (confirm('Ready to deploy to Railway? Your Smart Physics Hub will be live in 2 minutes!')) {
+                window.open('https://railway.app/new', '_blank');
+            }
+        }, 5000);
+    </script>
+</body>
+</html>

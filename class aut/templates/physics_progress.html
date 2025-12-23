@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}Progress - Smart Physics Hub{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h1><i class="fas fa-chart-line"></i> Learning Progress</h1>
+        <p class="lead">Track your physics learning journey</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5>Topic Progress</h5>
+            </div>
+            <div class="card-body">
+                <div class="progress mb-3">
+                    <div class="progress-bar" style="width: {{ (progress.completed_topics / progress.total_topics * 100)|round }}%">
+                        {{ progress.completed_topics }}/{{ progress.total_topics }} Topics
+                    </div>
+                </div>
+                <p><strong>Current Level:</strong> {{ progress.current_level }}</p>
+                <p><strong>Completed Topics:</strong> {{ progress.completed_topics }}</p>
+                <p><strong>Remaining Topics:</strong> {{ progress.total_topics - progress.completed_topics }}</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5>Quiz Performance</h5>
+            </div>
+            <div class="card-body">
+                <p><strong>Average Score:</strong> {{ (progress.quiz_scores|sum / progress.quiz_scores|length)|round }}%</p>
+                <p><strong>Best Score:</strong> {{ progress.quiz_scores|max }}%</p>
+                <p><strong>Recent Scores:</strong></p>
+                <ul>
+                    {% for score in progress.quiz_scores[-3:] %}
+                    <li>{{ score }}%</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12 text-center">
+        <a href="{{ url_for('classroom') }}" class="btn btn-primary btn-lg">
+            <i class="fas fa-chalkboard-teacher"></i> Continue Learning
+        </a>
+    </div>
+</div>
+{% endblock %}

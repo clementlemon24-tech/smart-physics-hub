@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deploy Smart Physics Hub to Heroku</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .step-card { transition: transform 0.2s; }
+        .step-card:hover { transform: translateY(-5px); }
+        .step-number { 
+            background: linear-gradient(45deg, #007bff, #0056b3);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <!-- Header -->
+                <div class="text-center mb-5">
+                    <h1 class="display-4 text-primary">
+                        <i class="fab fa-heroku"></i> Deploy to Heroku
+                    </h1>
+                    <p class="lead">Get your Smart Physics Hub live in 5 minutes!</p>
+                    <div class="alert alert-success">
+                        <i class="fas fa-check-circle"></i> All deployment files are ready!
+                    </div>
+                </div>
+
+                <!-- Method 1: Web Dashboard -->
+                <div class="card mb-5 border-primary">
+                    <div class="card-header bg-primary text-white">
+                        <h2><i class="fas fa-globe"></i> Method 1: Web Dashboard (Easiest)</h2>
+                        <p class="mb-0">No command line required!</p>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <!-- Step 1 -->
+                            <div class="col-md-6 mb-4">
+                                <div class="card step-card h-100">
+                                    <div class="card-body">
+                                        <div class="d-flex align-items-center mb-3">
+                                            <div class="step-number me-3">1</div>
+                                            <h5 class="mb-0">Create Account</h5>
+                                        </div>
+                                        <p>Go to <strong>heroku.com</strong> and sign up for free</p>
+                                        <a href="https://signup.heroku.com" class="btn btn-outline-primary" target="_blank">
+                                            <i class="fas fa-external-link-alt"></i> Sign Up
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Step 2 -->
+                            <div class="col-md-6 mb-4">
+                                <div class="card step-card h-100">
+                                    <div class="card-body">
+                                        <div class="d-flex align-items-center mb-3">
+                                            <div class="step-number me-3">2</div>
+                                            <h5 class="mb-0">Create App</h5>
+                                        </div>
+                                        <p>Click "New" → "Create new app"<br>
+                                        Name: <code>smart-physics-hub-yourname</code></p>
+                                        <a href="https://dashboard.heroku.com/new-app" class="btn btn-outline-primary" target="_blank">
+                                            <i class="fas fa-plus"></i> Create App
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Step 3 -->
+                            <div class="col-md-6 mb-4">
+                                <div class="card step-card h-100">
+                                    <div class="card-body">
+                                        <div class="d-flex align-items-center mb-3">
+                                            <div class="step-number me-3">3</div>
+                                            <h5 class="mb-0">Connect GitHub</h5>
+                                        </div>
+                                        <p>Go to "Deploy" tab → Connect to GitHub → Select your repository</p>
+                                        <div class="alert alert-info">
+                                            <small><i class="fas fa-info-circle"></i> Upload your project to GitHub first</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Step 4 -->
+                            <div class="col-md-6 mb-4">
+                                <div class="card step-card h-100">
+                                    <div class="card-body">
+                                        <div class="d-flex align-items-center mb-3">
+                                            <div class="step-number me-3">4</div>
+                                            <h5 class="mb-0">Deploy!</h5>
+                                        </div>
+                                        <p>Scroll to "Manual deploy" → Click "Deploy Branch"</p>
+                                        <div class="alert alert-success">
+                                            <small><i class="fas fa-rocket"></i> Wait 3-5 minutes - Your app will be LIVE!</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Method 2: Command Line -->
+                <div class="card mb-5 border-secondary">
+                    <div class="card-header bg-secondary text-white">
+                        <h2><i class="fas fa-terminal"></i> Method 2: Command Line</h2>
+                        <p class="mb-0">For advanced users</p>
+                    </div>
+                    <div class="card-body">
+                        <div class="alert alert-warning">
+                            <i class="fas fa-download"></i> First install Heroku CLI: 
+                            <a href="https://devcenter.heroku.com/articles/heroku-cli" target="_blank">Download Here</a>
+                        </div>
+                        
+                        <h5>Commands to run:</h5>
+                        <div class="bg-dark text-light p-3 rounded mb-3">
+                            <code>
+                                # Login to Heroku<br>
+                                heroku login<br><br>
+                                
+                                # Create app<br>
+                                heroku create smart-physics-hub-yourname<br><br>
+                                
+                                # Initialize Git<br>
+                                git init<br>
+                                git add .<br>
+                                git commit -m "Deploy Smart Physics Hub"<br><br>
+                                
+                                # Deploy<br>
+                                git push heroku main<br><br>
+                                
+                                # Open app<br>
+                                heroku open
+                            </code>
+                        </div>
+                        
+                        <div class="alert alert-info">
+                            <i class="fas fa-magic"></i> Or run our automated script: <code>deploy_heroku.bat</code>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- What You Get -->
+                <div class="card mb-5 border-success">
+                    <div class="card-header bg-success text-white">
+                        <h2><i class="fas fa-star"></i> What You Get After Deployment</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h5><i class="fas fa-globe text-success"></i> Global Access</h5>
+                                <ul>
+                                    <li>24/7 availability</li>
+                                    <li>Works on mobile, tablet, laptop</li>
+                                    <li>HTTPS security</li>
+                                    <li>Global CDN</li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <h5><i class="fas fa-rocket text-success"></i> Features</h5>
+                                <ul>
+                                    <li>AI Tutor (Engineer Clement Ekelemchi)</li>
+                                    <li>Interactive Classroom</li>
+                                    <li>Virtual Laboratory</li>
+                                    <li>Physics Encyclopedia</li>
+                                    <li>Nanophysics & AI Topics</li>
+                                    <li>JAMB/WAEC/NECO Prep</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Your Live URL -->
+                <div class="card border-warning">
+                    <div class="card-header bg-warning">
+                        <h2><i class="fas fa-link"></i> Your Live URL</h2>
+                    </div>
+                    <div class="card-body text-center">
+                        <h4>After deployment, your app will be live at:</h4>
+                        <div class="alert alert-primary">
+                            <h3><code>https://smart-physics-hub-yourname.herokuapp.com</code></h3>
+                        </div>
+                        <p>Share this URL with students, teachers, and anyone who wants to learn physics!</p>
+                        
+                        <div class="row mt-4">
+                            <div class="col-md-4">
+                                <div class="card bg-light">
+                                    <div class="card-body text-center">
+                                        <i class="fas fa-mobile-alt fa-2x text-primary mb-2"></i>
+                                        <h6>Mobile Ready</h6>
+                                        <small>Perfect on phones</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card bg-light">
+                                    <div class="card-body text-center">
+                                        <i class="fas fa-clock fa-2x text-success mb-2"></i>
+                                        <h6>24/7 Available</h6>
+                                        <small>Always online</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card bg-light">
+                                    <div class="card-body text-center">
+                                        <i class="fas fa-shield-alt fa-2x text-warning mb-2"></i>
+                                        <h6>Secure HTTPS</h6>
+                                        <small>Safe & encrypted</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Deploy Button -->
+                <div class="text-center mt-5">
+                    <a href="https://heroku.com" class="btn btn-primary btn-lg" target="_blank">
+                        <i class="fab fa-heroku"></i> Deploy to Heroku Now!
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

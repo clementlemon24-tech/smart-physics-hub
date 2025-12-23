@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block title %}Report Sighting - Pest Tracker{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-eye"></i> Report Pest Sighting</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="mb-3">
+                        <label for="pest_id" class="form-label">Pest Type *</label>
+                        <select class="form-select" id="pest_id" name="pest_id" required>
+                            <option value="">Select a pest...</option>
+                            {% for pest in pests %}
+                            <option value="{{ pest.id }}">{{ pest.name }} ({{ pest.pest_type.value.title() }})</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="location_id" class="form-label">Location *</label>
+                        <select class="form-select" id="location_id" name="location_id" required>
+                            <option value="">Select a location...</option>
+                            {% for location in locations %}
+                            <option value="{{ location.id }}">{{ location.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="severity" class="form-label">Severity Level *</label>
+                        <select class="form-select" id="severity" name="severity" required>
+                            <option value="">Select severity...</option>
+                            {% for severity in severity_levels %}
+                            <option value="{{ severity.value }}">{{ severity.value.title() }}</option>
+                            {% endfor %}
+                        </select>
+                        <div class="form-text">
+                            <strong>Low:</strong> Single pest, no damage<br>
+                            <strong>Medium:</strong> Few pests, minor damage<br>
+                            <strong>High:</strong> Multiple pests, visible damage<br>
+                            <strong>Critical:</strong> Infestation, significant damage
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Description *</label>
+                        <textarea class="form-control" id="description" name="description" rows="4" required 
+                                  placeholder="Describe what you observed, where exactly, any damage, etc."></textarea>
+                    </div>
+                    
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{{ url_for('sightings') }}" class="btn btn-secondary me-md-2">Cancel</a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Report Sighting
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if not pests or not locations %}
+<div class="alert alert-warning mt-3">
+    <h6>Setup Required:</h6>
+    {% if not locations %}
+    <p>You need to <a href="{{ url_for('add_location') }}">add locations</a> before reporting sightings.</p>
+    {% endif %}
+    {% if not pests %}
+    <p>No pest types are available. The system will create common pests automatically.</p>
+    {% endif %}
+</div>
+{% endif %}
+{% endblock %}

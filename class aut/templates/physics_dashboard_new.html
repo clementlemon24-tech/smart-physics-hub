@@ -1,0 +1,303 @@
+{% extends "base.html" %}
+
+{% block title %}Smart Physics Hub - Dashboard{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h1><i class="fas fa-atom"></i> Smart Physics Hub Dashboard</h1>
+        <p class="lead">Your AI-Powered Physics Learning Platform with Engineer Clement Ekelemchi</p>
+    </div>
+</div>
+
+<!-- AI Tutor Highlight -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card bg-gradient-primary text-white">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-md-2 text-center">
+                        <i class="fas fa-robot fa-4x"></i>
+                    </div>
+                    <div class="col-md-7">
+                        <h4><i class="fas fa-sparkles"></i> Meet Your AI Physics Tutor</h4>
+                        <p class="mb-0">Engineer Clement Ekelemchi is available 24/7 to answer your physics questions, explain concepts, solve problems, and help you prepare for JAMB. Get instant, personalized explanations with voice responses!</p>
+                    </div>
+                    <div class="col-md-3 text-end">
+                        <a href="{{ url_for('ai_tutor_page') }}" class="btn btn-light btn-lg mb-2 d-block">
+                            <i class="fas fa-comments"></i> Chat with AI Tutor
+                        </a>
+                        <a href="{{ url_for('classroom') }}" class="btn btn-outline-light d-block">
+                            <i class="fas fa-chalkboard-teacher"></i> Enter Classroom
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Statistics Cards -->
+<div class="row mb-4">
+    <div class="col-md-3 mb-3">
+        <div class="card text-center h-100">
+            <div class="card-body">
+                <i class="fas fa-book fa-2x text-primary mb-2"></i>
+                <h3 class="text-primary">{{ stats.total_topics }}</h3>
+                <p class="mb-0">Physics Topics</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card text-center h-100">
+            <div class="card-body">
+                <i class="fas fa-graduation-cap fa-2x text-success mb-2"></i>
+                <h3 class="text-success">{{ stats.total_lessons }}</h3>
+                <p class="mb-0">Total Lessons</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card text-center h-100">
+            <div class="card-body">
+                <i class="fas fa-users fa-2x text-info mb-2"></i>
+                <h3 class="text-info">{{ stats.active_students }}</h3>
+                <p class="mb-0">Active Students</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card text-center h-100">
+            <div class="card-body">
+                <i class="fas fa-robot fa-2x text-warning mb-2"></i>
+                <h3 class="text-warning">24/7</h3>
+                <p class="mb-0">AI Tutor Available</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="row mb-4">
+    <div class="col-md-4 mb-3">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <i class="fas fa-chalkboard-teacher fa-3x text-primary mb-3"></i>
+                <h5>Interactive Classroom</h5>
+                <p>Learn with Engineer Clement Ekelemchi in our virtual classroom with voice explanations and JAMB practice questions.</p>
+                <a href="{{ url_for('classroom') }}" class="btn btn-primary">
+                    <i class="fas fa-play"></i> Start Learning
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4 mb-3">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <i class="fas fa-robot fa-3x text-success mb-3"></i>
+                <h5>AI Physics Tutor</h5>
+                <p>Chat with our AI tutor for instant answers to any physics question. Available 24/7 with voice responses.</p>
+                <a href="{{ url_for('ai_tutor_page') }}" class="btn btn-success">
+                    <i class="fas fa-comments"></i> Ask Questions
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4 mb-3">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <i class="fas fa-graduation-cap fa-3x text-warning mb-3"></i>
+                <h5>JAMB Practice</h5>
+                <p>Practice with real JAMB physics questions and get step-by-step solutions from our AI tutor.</p>
+                <a href="{{ url_for('practice') }}" class="btn btn-warning">
+                    <i class="fas fa-pencil-alt"></i> Practice Now
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Virtual Lab Section -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card bg-gradient-success text-white">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-md-2 text-center">
+                        <i class="fas fa-flask fa-4x"></i>
+                    </div>
+                    <div class="col-md-7">
+                        <h4><i class="fas fa-microscope"></i> AI-Guided Virtual Laboratory</h4>
+                        <p class="mb-0">Conduct real physics experiments with Engineer Clement Ekelemchi as your lab instructor. Investigate projectile motion, pendulum oscillations, and more with automatic lab report generation!</p>
+                    </div>
+                    <div class="col-md-3 text-end">
+                        <a href="{{ url_for('virtual_lab') }}" class="btn btn-light btn-lg">
+                            <i class="fas fa-flask"></i> Enter Virtual Lab
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Physics Topics Overview -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-atom"></i> Physics Topics Available</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    {% for category, lesson_list in lessons.items() %}
+                    <div class="col-md-6 col-lg-3 mb-3">
+                        <div class="card border-primary h-100">
+                            <div class="card-body text-center">
+                                {% if category == 'mechanics' %}
+                                    <i class="fas fa-cog fa-2x text-primary mb-2"></i>
+                                {% elif category == 'waves' %}
+                                    <i class="fas fa-wave-square fa-2x text-info mb-2"></i>
+                                {% elif category == 'thermodynamics' %}
+                                    <i class="fas fa-thermometer-half fa-2x text-danger mb-2"></i>
+                                {% elif category == 'electricity' %}
+                                    <i class="fas fa-bolt fa-2x text-warning mb-2"></i>
+                                {% endif %}
+                                <h6 class="text-capitalize">{{ category }}</h6>
+                                <small class="text-muted">{{ lesson_list|length }} lessons</small>
+                                <div class="mt-2">
+                                    {% for lesson in lesson_list[:2] %}
+                                    <span class="badge bg-light text-dark mb-1 d-block">{{ lesson }}</span>
+                                    {% endfor %}
+                                    {% if lesson_list|length > 2 %}
+                                    <span class="badge bg-secondary">+{{ lesson_list|length - 2 }} more</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Physics Encyclopedia Section -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card bg-gradient-info text-white">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-md-2 text-center">
+                        <i class="fas fa-book-open fa-4x"></i>
+                    </div>
+                    <div class="col-md-7">
+                        <h4><i class="fas fa-encyclopedia"></i> Complete Physics Encyclopedia</h4>
+                        <p class="mb-0">Access comprehensive physics reference with all formulas, explanations, examples, and applications. Search through mechanics, waves, thermodynamics, electricity, and modern physics!</p>
+                    </div>
+                    <div class="col-md-3 text-end">
+                        <a href="{{ url_for('physics_encyclopedia') }}" class="btn btn-light btn-lg">
+                            <i class="fas fa-book-open"></i> Browse Encyclopedia
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Activity -->
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h6><i class="fas fa-clock"></i> Getting Started</h6>
+            </div>
+            <div class="card-body">
+                <div class="list-group list-group-flush">
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <i class="fas fa-chalkboard-teacher text-primary me-2"></i>
+                            Visit the Interactive Classroom
+                        </div>
+                        <span class="badge bg-primary rounded-pill">New</span>
+                    </div>
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <i class="fas fa-robot text-success me-2"></i>
+                            Chat with AI Physics Tutor
+                        </div>
+                        <span class="badge bg-success rounded-pill">24/7</span>
+                    </div>
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <i class="fas fa-graduation-cap text-warning me-2"></i>
+                            Practice JAMB Questions
+                        </div>
+                        <span class="badge bg-warning rounded-pill">Ready</span>
+                    </div>
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <i class="fas fa-book-open text-info me-2"></i>
+                            Browse Physics Encyclopedia
+                        </div>
+                        <span class="badge bg-info rounded-pill">Complete</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h6><i class="fas fa-lightbulb"></i> AI Tutor Features</h6>
+            </div>
+            <div class="card-body">
+                <ul class="list-unstyled">
+                    <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Instant answers to physics questions</li>
+                    <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Step-by-step problem solving</li>
+                    <li class="mb-2"><i class="fas fa-check text-success me-2"></i> JAMB exam preparation tips</li>
+                    <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Voice responses with Nigerian accent</li>
+                    <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Formula explanations and examples</li>
+                    <li class="mb-0"><i class="fas fa-check text-success me-2"></i> Available in multiple languages</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.bg-gradient-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.bg-gradient-success {
+    background: linear-gradient(135deg, #56ab2f 0%, #a8e6cf 100%);
+}
+
+.bg-gradient-info {
+    background: linear-gradient(135deg, #17a2b8 0%, #6f42c1 100%);
+}
+
+.card {
+    transition: transform 0.2s ease-in-out;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+}
+
+.fa-sparkles {
+    animation: sparkle 2s infinite;
+}
+
+@keyframes sparkle {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+</style>
+{% endblock %}

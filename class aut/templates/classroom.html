@@ -1,0 +1,1740 @@
+{% extends "base.html" %}
+
+{% block title %}Smart Physics Hub - Interactive Learning{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12 text-center">
+        <h1><i class="fas fa-atom"></i> Smart Physics Hub</h1>
+        <p class="lead">Advanced Interactive Physics Learning Platform</p>
+    </div>
+</div>
+
+<!-- Modern Classroom Interface -->
+<div class="classroom-container">
+    <div class="row">
+        <!-- Main Whiteboard Area -->
+        <div class="col-lg-8">
+            <div class="whiteboard-modern">
+                <div class="whiteboard-header">
+                    <h3><i class="fas fa-chalkboard-teacher"></i> Engineer Clement Ekelemchi - Physics Class</h3>
+                    <div class="class-info">
+                        <span id="class-date"></span> | <span id="lesson-time">0:00</span>
+                    </div>
+                </div>
+                
+                <div class="lesson-content">
+                    <div class="current-topic">
+                        <h2 id="lesson-title">Newton's Laws of Motion</h2>
+                        <div class="topic-description" id="topic-description">
+                            Understanding the fundamental principles of motion and forces
+                        </div>
+                    </div>
+                    
+                    <div class="formula-display">
+                        <div class="formula-box">
+                            <div class="formula" id="current-formula">F = ma</div>
+                            <div class="formula-meaning" id="formula-meaning">Force = Mass × Acceleration</div>
+                        </div>
+                    </div>
+                    
+                    <div class="key-points">
+                        <h4>Key Concepts:</h4>
+                        <ul id="lesson-points">
+                            <li>First Law: Objects at rest stay at rest unless acted upon by force</li>
+                            <li>Second Law: Force equals mass times acceleration (F = ma)</li>
+                            <li>Third Law: Every action has an equal and opposite reaction</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="jamb-practice" id="jamb-section">
+                        <h4><i class="fas fa-graduation-cap"></i> JAMB Practice Question:</h4>
+                        <div class="question-card">
+                            <div class="question" id="current-question">
+                                A body of mass 2kg moves with velocity 10m/s. What is its kinetic energy?
+                            </div>
+                            <div class="options" id="question-options">
+                                <button class="option-btn" onclick="selectOption(this, false)">A) 50J</button>
+                                <button class="option-btn" onclick="selectOption(this, true)">B) 100J</button>
+                                <button class="option-btn" onclick="selectOption(this, false)">C) 200J</button>
+                                <button class="option-btn" onclick="selectOption(this, false)">D) 20J</button>
+                            </div>
+                            <div class="answer-explanation" id="answer-section" style="display: none;">
+                                <div class="correct-answer">✅ Answer: B) 100J</div>
+                                <div class="explanation">Using KE = ½mv² = ½(2)(10)² = 100J</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Control Panel -->
+        <div class="col-lg-4">
+            <div class="control-panel">
+                <div class="card mb-3">
+                    <div class="card-header bg-primary text-white">
+                        <h5><i class="fas fa-microphone"></i> Voice Controls</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label class="form-label">Language:</label>
+                            <select id="language-select" class="form-select">
+                                <option value="en-NG">English (Nigeria) - Deep Male</option>
+                                <option value="en-US">English (US)</option>
+                                <option value="en-GB">English (UK)</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Volume: <span id="volume-display">95%</span></label>
+                            <input type="range" id="volume-slider" min="0" max="100" value="95" class="form-range">
+                        </div>
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-success" onclick="startLesson()">
+                                <i class="fas fa-play"></i> Start Lesson
+                            </button>
+                            <button class="btn btn-outline-primary" onclick="testSpeech()">
+                                <i class="fas fa-volume-up"></i> Test Voice
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card mb-3">
+                    <div class="card-header bg-success text-white">
+                        <h5><i class="fas fa-chalkboard-teacher"></i> Lesson Actions</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-primary" onclick="askQuestion()">
+                                <i class="fas fa-question"></i> Ask Question
+                            </button>
+                            <button class="btn btn-warning" onclick="changeLesson()">
+                                <i class="fas fa-sync"></i> Change Topic
+                            </button>
+                            <button class="btn btn-info" onclick="explainFormula()">
+                                <i class="fas fa-calculator"></i> Explain Formula
+                            </button>
+                            <button class="btn btn-secondary" onclick="giveExample()">
+                                <i class="fas fa-lightbulb"></i> Give Example
+                            </button>
+                            <button class="btn btn-danger" onclick="solveJambQuestion()">
+                                <i class="fas fa-graduation-cap"></i> Solve JAMB Q
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header bg-info text-white">
+                        <h5><i class="fas fa-link"></i> Quick Links</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-grid gap-2">
+                            <a href="{{ url_for('ai_tutor_page') }}" class="btn btn-outline-success">
+                                <i class="fas fa-robot"></i> AI Tutor
+                            </a>
+                            <a href="{{ url_for('virtual_lab') }}" class="btn btn-outline-warning">
+                                <i class="fas fa-flask"></i> Virtual Lab
+                            </a>
+                            <a href="{{ url_for('lessons') }}" class="btn btn-outline-primary">
+                                <i class="fas fa-book"></i> All Lessons
+                            </a>
+                            <a href="{{ url_for('encyclopedia') }}" class="btn btn-outline-info">
+                                <i class="fas fa-encyclopedia"></i> Encyclopedia
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Progress Tracking -->
+<div class="row mt-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-chart-line"></i> Lesson Progress</h5>
+            </div>
+            <div class="card-body">
+                <div class="progress mb-3">
+                    <div class="progress-bar bg-success" id="lesson-progress" style="width: 25%">25%</div>
+                </div>
+                <p><strong>Current Phase:</strong> <span id="lesson-phase">Introduction</span></p>
+                <p><strong>Time Elapsed:</strong> <span id="lesson-time-display">0:00</span></p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-brain"></i> Learning Status</h5>
+            </div>
+            <div class="card-body">
+                <div class="mb-2">
+                    <span>Understanding Level:</span>
+                    <span class="badge bg-success float-end">Excellent</span>
+                </div>
+                <div class="mb-2">
+                    <span>Questions Answered:</span>
+                    <span class="badge bg-info float-end" id="questions-count">0</span>
+                </div>
+                <div class="mb-2">
+                    <span>Current Topic:</span>
+                    <span class="badge bg-warning float-end">Mechanics</span>
+                </div>
+                <div class="mb-2">
+                    <span>Voice Status:</span>
+                    <span class="badge bg-primary float-end" id="voice-status">Ready</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.classroom-container {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 15px;
+    padding: 30px;
+    margin-bottom: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.whiteboard-modern {
+    background: #ffffff;
+    border-radius: 10px;
+    padding: 25px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    min-height: 600px;
+}
+
+.whiteboard-header {
+    border-bottom: 3px solid #007bff;
+    padding-bottom: 15px;
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+.whiteboard-header h3 {
+    color: #007bff;
+    margin: 0 0 10px 0;
+    font-weight: bold;
+}
+
+.class-info {
+    color: #6c757d;
+    font-size: 14px;
+}
+
+.current-topic {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.current-topic h2 {
+    color: #e74c3c;
+    font-size: 28px;
+    margin-bottom: 10px;
+    text-decoration: underline;
+}
+
+.topic-description {
+    color: #6c757d;
+    font-size: 16px;
+    font-style: italic;
+}
+
+.formula-display {
+    background: #f8f9fa;
+    border: 3px solid #28a745;
+    border-radius: 15px;
+    padding: 30px;
+    margin: 25px 0;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.formula {
+    font-size: 48px;
+    font-weight: bold;
+    color: #dc3545;
+    font-family: 'Times New Roman', serif;
+    margin-bottom: 15px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+}
+
+.formula-meaning {
+    font-size: 18px;
+    color: #6f42c1;
+    font-weight: 600;
+}
+
+.key-points {
+    margin: 25px 0;
+}
+
+.key-points h4 {
+    color: #28a745;
+    border-bottom: 2px solid #28a745;
+    padding-bottom: 8px;
+    margin-bottom: 15px;
+}
+
+.key-points ul {
+    font-size: 16px;
+    line-height: 1.8;
+}
+
+.key-points li {
+    margin-bottom: 10px;
+    font-weight: 500;
+    color: #495057;
+}
+
+.jamb-practice {
+    background: #e3f2fd;
+    border: 3px solid #2196f3;
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 25px;
+}
+
+.jamb-practice h4 {
+    color: #1976d2;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.question-card {
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+}
+
+.question {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.option-btn {
+    background: #f8f9fa;
+    border: 2px solid #dee2e6;
+    border-radius: 8px;
+    padding: 12px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.option-btn:hover {
+    background: #e9ecef;
+    border-color: #007bff;
+    transform: translateY(-2px);
+}
+
+.option-btn.correct {
+    background: #d4edda;
+    border-color: #28a745;
+    color: #155724;
+}
+
+.option-btn.wrong {
+    background: #f8d7da;
+    border-color: #dc3545;
+    color: #721c24;
+}
+
+.answer-explanation {
+    background: #d4edda;
+    border: 2px solid #28a745;
+    border-radius: 8px;
+    padding: 15px;
+    margin-top: 15px;
+}
+
+.correct-answer {
+    font-weight: bold;
+    color: #155724;
+    margin-bottom: 8px;
+}
+
+.explanation {
+    color: #155724;
+    font-size: 14px;
+}
+
+.control-panel .card {
+    border: none;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.btn {
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .classroom-container {
+        padding: 15px;
+    }
+    
+    .formula {
+        font-size: 36px;
+    }
+    
+    .current-topic h2 {
+        font-size: 24px;
+    }
+    
+    .options {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+
+<script>
+// Global variables
+let currentSpeech = null;
+let autoSpeak = true;
+let lessonStartTime = null;
+let questionsAnswered = 0;
+
+// Initialize classroom
+document.addEventListener('DOMContentLoaded', function() {
+    updateDateTime();
+    setInterval(updateDateTime, 1000);
+    setInterval(updateLessonTime, 1000);
+    
+    // Volume control
+    document.getElementById('volume-slider').addEventListener('input', function() {
+        document.getElementById('volume-display').textContent = this.value + '%';
+    });
+});
+
+function updateDateTime() {
+    const now = new Date();
+    document.getElementById('class-date').textContent = now.toLocaleDateString() + ' ' + now.toLocaleTimeString();
+}
+
+function updateLessonTime() {
+    if (lessonStartTime) {
+        const elapsed = Math.floor((Date.now() - lessonStartTime) / 1000);
+        const minutes = Math.floor(elapsed / 60);
+        const seconds = elapsed % 60;
+        const timeStr = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        document.getElementById('lesson-time').textContent = timeStr;
+        document.getElementById('lesson-time-display').textContent = timeStr;
+    }
+}
+
+function speak(text, callback) {
+    if (currentSpeech) {
+        speechSynthesis.cancel();
+    }
+    
+    const utterance = new SpeechSynthesisUtterance(text);
+    const language = document.getElementById('language-select').value;
+    const volume = document.getElementById('volume-slider').value / 100;
+    
+    utterance.lang = language;
+    utterance.volume = volume;
+    utterance.rate = 0.9;
+    utterance.pitch = 0.8; // Deeper voice
+    
+    // Try to use a male voice
+    const voices = speechSynthesis.getVoices();
+    const maleVoice = voices.find(voice => 
+        voice.lang.startsWith(language.split('-')[0]) && 
+        (voice.name.includes('Male') || voice.name.includes('David') || voice.name.includes('Mark'))
+    );
+    
+    if (maleVoice) {
+        utterance.voice = maleVoice;
+    }
+    
+    utterance.onstart = function() {
+        document.getElementById('voice-status').textContent = 'Speaking';
+        document.getElementById('voice-status').className = 'badge bg-success float-end';
+    };
+    
+    utterance.onend = function() {
+        document.getElementById('voice-status').textContent = 'Ready';
+        document.getElementById('voice-status').className = 'badge bg-primary float-end';
+        currentSpeech = null;
+        if (callback) callback();
+    };
+    
+    currentSpeech = utterance;
+    speechSynthesis.speak(utterance);
+}
+
+function startLesson() {
+    lessonStartTime = Date.now();
+    document.getElementById('lesson-phase').textContent = 'Active Learning';
+    
+    const welcomeText = `Welcome to Smart Physics Hub! I am Engineer Clement Ekelemchi, your physics instructor. 
+                        Today we will explore Newton's Laws of Motion. These fundamental principles govern how objects move 
+                        and interact with forces. Let's begin with the first law.`;
+    
+    speak(welcomeText, function() {
+        updateLessonProgress(50);
+        document.getElementById('lesson-phase').textContent = 'Explaining Concepts';
+    });
+}
+
+function askQuestion() {
+    const questions = [
+        "What is the relationship between force, mass, and acceleration?",
+        "Can you give me an example of Newton's third law?",
+        "How does friction affect motion?",
+        "What is the difference between weight and mass?"
+    ];
+    
+    const randomQuestion = questions[Math.floor(Math.random() * questions.length)];
+    speak(`Here's a question for you: ${randomQuestion}. Think about it and let me know when you're ready for the answer.`);
+}
+
+function changeLesson() {
+    const topics = [
+        {title: "Energy and Work", formula: "W = F × d", description: "Understanding energy transformations"},
+        {title: "Waves and Sound", formula: "v = fλ", description: "Properties of wave motion"},
+        {title: "Electricity", formula: "V = IR", description: "Ohm's law and electrical circuits"},
+        {title: "Thermodynamics", formula: "PV = nRT", description: "Gas laws and heat transfer"}
+    ];
+    
+    const newTopic = topics[Math.floor(Math.random() * topics.length)];
+    
+    document.getElementById('lesson-title').textContent = newTopic.title;
+    document.getElementById('topic-description').textContent = newTopic.description;
+    document.getElementById('current-formula').textContent = newTopic.formula;
+    
+    speak(`Now let's switch to ${newTopic.title}. ${newTopic.description}. The key formula is ${newTopic.formula}.`);
+    updateLessonProgress(25);
+}
+
+function explainFormula() {
+    const formula = document.getElementById('current-formula').textContent;
+    const explanations = {
+        "F = ma": "Force equals mass times acceleration. This means that the force needed to accelerate an object depends on both its mass and how quickly you want to accelerate it.",
+        "W = F × d": "Work equals force times distance. Work is done when a force moves an object through a distance.",
+        "v = fλ": "Wave velocity equals frequency times wavelength. This shows how fast a wave travels.",
+        "V = IR": "Voltage equals current times resistance. This is Ohm's law, fundamental to understanding electrical circuits.",
+        "PV = nRT": "This is the ideal gas law. Pressure times volume equals the number of moles times the gas constant times temperature."
+    };
+    
+    const explanation = explanations[formula] || "This is an important physics formula that we use to solve problems.";
+    speak(explanation);
+}
+
+function giveExample() {
+    const examples = [
+        "When you push a shopping cart, you're applying Newton's second law. The harder you push, the more it accelerates.",
+        "When you walk, you push back on the ground, and the ground pushes you forward. That's Newton's third law.",
+        "A ball thrown upward slows down due to gravity, stops, then falls back down, demonstrating constant acceleration.",
+        "In a car crash, airbags increase the time of impact, reducing the force on passengers."
+    ];
+    
+    const randomExample = examples[Math.floor(Math.random() * examples.length)];
+    speak(`Here's a real-world example: ${randomExample}`);
+}
+
+function solveJambQuestion() {
+    document.getElementById('answer-section').style.display = 'block';
+    questionsAnswered++;
+    document.getElementById('questions-count').textContent = questionsAnswered;
+    
+    speak("Let me solve this JAMB question step by step. The kinetic energy formula is KE equals half mass times velocity squared. So KE equals half times 2 times 10 squared, which equals 100 Joules. The answer is B.");
+    
+    updateLessonProgress(75);
+}
+
+function selectOption(button, isCorrect) {
+    // Remove previous selections
+    document.querySelectorAll('.option-btn').forEach(btn => {
+        btn.classList.remove('correct', 'wrong');
+    });
+    
+    // Mark the selected option
+    if (isCorrect) {
+        button.classList.add('correct');
+        speak("Excellent! That's the correct answer.");
+    } else {
+        button.classList.add('wrong');
+        speak("Not quite right. Let me explain the correct answer.");
+        setTimeout(() => {
+            document.querySelector('.option-btn:nth-child(2)').classList.add('correct');
+        }, 1000);
+    }
+    
+    document.getElementById('answer-section').style.display = 'block';
+    questionsAnswered++;
+    document.getElementById('questions-count').textContent = questionsAnswered;
+}
+
+function testSpeech() {
+    speak("Hello! I am Engineer Clement Ekelemchi, your physics instructor. The Smart Physics Hub is working perfectly!");
+}
+
+function updateLessonProgress(percentage) {
+    const progressBar = document.getElementById('lesson-progress');
+    progressBar.style.width = percentage + '%';
+    progressBar.textContent = percentage + '%';
+    
+    if (percentage >= 75) {
+        progressBar.className = 'progress-bar bg-success';
+        document.getElementById('lesson-phase').textContent = 'Mastery Level';
+    } else if (percentage >= 50) {
+        progressBar.className = 'progress-bar bg-warning';
+        document.getElementById('lesson-phase').textContent = 'Understanding';
+    } else {
+        progressBar.className = 'progress-bar bg-info';
+    }
+}
+
+// Load voices when available
+speechSynthesis.onvoiceschanged = function() {
+    // Voices are now loaded
+};
+</script>
+{% endblock %} { transform: rotate(45deg); }
+    50% { transform: rotate(25deg); }
+}
+
+@keyframes speechAppear {
+    0%, 20% { opacity: 0; transform: scale(0.8); }
+    30%, 70% { opacity: 1; transform: scale(1); }
+    80%, 100% { opacity: 0; transform: scale(0.8); }
+}
+
+@keyframes studentBob {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .classroom {
+        padding: 15px;
+        min-height: 400px;
+    }
+    
+    .blackboard {
+        width: 300px;
+        height: 150px;
+    }
+    
+    .blackboard-content {
+        padding: 10px;
+        font-size: 12px;
+    }
+    
+    .students-row {
+        gap: 20px;
+        right: 20px;
+    }
+    
+    .teacher {
+        left: 50px;
+    }
+    
+    .classroom-controls {
+        position: relative;
+        margin-top: 20px;
+    }
+}
+</style>
+{% endblock %}
+
+{% block scripts %}
+<script>
+let lessonStarted = false;
+let lessonTime = 0;
+let lessonInterval;
+let autoSpeak = true;
+let currentSpeech = null;
+
+const lessons = [
+    {
+        title: "Newton's Laws of Motion",
+        formula: "F = ma",
+        meaning: "Force = Mass × Acceleration",
+        points: [
+            "First Law: Objects at rest stay at rest unless acted upon by force",
+            "Second Law: Force equals mass times acceleration (F = ma)",
+            "Third Law: Every action has an equal and opposite reaction",
+            "Example: When a danfo bus brakes, passengers move forward (inertia)"
+        ],
+        jambQuestion: {
+            question: "A body of mass 5kg is acted upon by a force of 20N. What is its acceleration?",
+            options: ["A) 2m/s²", "B) 4m/s²", "C) 10m/s²", "D) 25m/s²"],
+            correct: 1,
+            explanation: "Using F = ma, a = F/m = 20/5 = 4m/s²"
+        },
+        translations: {
+            'es-ES': {
+                title: "Leyes del Movimiento de Newton",
+                points: [
+                    "La fuerza es igual a masa por aceleración",
+                    "Toda acción tiene una reacción igual y opuesta",
+                    "Los objetos en reposo permanecen en reposo"
+                ]
+            }
+        }
+    },
+    {
+        title: "Energy Conservation",
+        formula: "KE = ½mv²",
+        meaning: "Kinetic Energy = ½ × Mass × Velocity²",
+        points: [
+            "Energy cannot be created or destroyed, only transformed",
+            "Kinetic Energy: KE = ½mv² (energy of motion)",
+            "Potential Energy: PE = mgh (stored energy)",
+            "Example: Water falling from Kainji Dam converts PE to KE"
+        ],
+        jambQuestion: {
+            question: "A body of mass 2kg moves with velocity 10m/s. What is its kinetic energy?",
+            options: ["A) 50J", "B) 100J", "C) 200J", "D) 20J"],
+            correct: 1,
+            explanation: "Using KE = ½mv² = ½(2)(10)² = 100J"
+        }
+    },
+    {
+        title: "Wave Properties",
+        formula: "v = fλ",
+        meaning: "Velocity = Frequency × Wavelength",
+        points: [
+            "All waves follow this fundamental relationship",
+            "Higher frequency means shorter wavelength",
+            "Waves transfer energy without transferring matter",
+            "Example: Radio waves from Lagos stations have different frequencies"
+        ],
+        jambQuestion: {
+            question: "A wave has frequency 50Hz and wavelength 4m. What is its velocity?",
+            options: ["A) 100m/s", "B) 200m/s", "C) 12.5m/s", "D) 54m/s"],
+            correct: 1,
+            explanation: "Using v = fλ = 50 × 4 = 200m/s"
+        }
+    },
+    {
+        title: "Thermodynamics",
+        formula: "PV = nRT",
+        meaning: "Pressure × Volume = Amount × Gas Constant × Temperature",
+        points: [
+            "Describes behavior of ideal gases",
+            "Pressure and volume are inversely related at constant temperature",
+            "Heat always flows from hot to cold objects",
+            "Example: Cooking gas cylinder pressure changes with temperature"
+        ],
+        jambQuestion: {
+            question: "At constant temperature, if the volume of a gas is halved, what happens to pressure?",
+            options: ["A) Halved", "B) Doubled", "C) Remains same", "D) Quadrupled"],
+            correct: 1,
+            explanation: "By Boyle's Law (PV = constant), if V is halved, P must double"
+        }
+    }
+];
+
+const teacherPhrases = {
+    'en-NG': [
+        "Welcome to our physics class! I am Engineer Clement Ekelemchi, and today we shall explore the wonderful world of physics together.",
+        "My dear students, can someone explain what this formula means? Don't be shy now!",
+        "You see, notice how these variables relate to each other - this is the beauty of physics!",
+        "This principle, my friends, applies to many situations in our daily lives here in Nigeria and around the world.",
+        "Excellent question! Let me demonstrate this concept clearly for you.",
+        "Physics, you know, helps us understand the world around us - from the motion of vehicles on Lagos roads to the stars above us!",
+        "Very good! Now, let us examine this formula step by step.",
+        "In physics, we must always think critically and observe carefully.",
+        "This is fundamental knowledge that will serve you well in your studies and careers.",
+        "As your instructor, Engineer Clement Ekelemchi, I want you to understand that physics is everywhere around us.",
+        "Listen carefully, my students. This concept will help you in your engineering and science careers.",
+        "Remember, in physics, we don't just memorize formulas - we understand the principles behind them."
+    ],
+    'en-US': [
+        "Let's explore this fascinating concept together!",
+        "Can anyone explain what this formula means?",
+        "Notice how the variables relate to each other.",
+        "This principle applies to many real-world situations.",
+        "Great question! Let me demonstrate this concept.",
+        "Physics helps us understand the world around us."
+    ],
+    'es-ES': [
+        "¡Exploremos este concepto fascinante juntos!",
+        "¿Alguien puede explicar qué significa esta fórmula?",
+        "Observen cómo se relacionan las variables.",
+        "Este principio se aplica a muchas situaciones reales.",
+        "¡Excelente pregunta! Déjenme demostrar este concepto.",
+        "La física nos ayuda a entender el mundo que nos rodea."
+    ],
+    'fr-FR': [
+        "Explorons ensemble ce concept fascinant!",
+        "Quelqu'un peut-il expliquer ce que signifie cette formule?",
+        "Remarquez comment les variables sont liées.",
+        "Ce principe s'applique à de nombreuses situations réelles.",
+        "Excellente question! Laissez-moi démontrer ce concept.",
+        "La physique nous aide à comprendre le monde qui nous entoure."
+    ],
+    'de-DE': [
+        "Lassen Sie uns dieses faszinierende Konzept gemeinsam erkunden!",
+        "Kann jemand erklären, was diese Formel bedeutet?",
+        "Beachten Sie, wie die Variablen miteinander zusammenhängen.",
+        "Dieses Prinzip gilt für viele reale Situationen.",
+        "Großartige Frage! Lassen Sie mich dieses Konzept demonstrieren.",
+        "Physik hilft uns, die Welt um uns herum zu verstehen."
+    ],
+    'pt-BR': [
+        "Vamos explorar este conceito fascinante juntos!",
+        "Alguém pode explicar o que esta fórmula significa?",
+        "Observem como as variáveis se relacionam.",
+        "Este princípio se aplica a muitas situações do mundo real.",
+        "Ótima pergunta! Deixem-me demonstrar este conceito.",
+        "A física nos ajuda a entender o mundo ao nosso redor."
+    ],
+    'ja-JP': [
+        "この魅力的な概念を一緒に探求しましょう！",
+        "この公式が何を意味するか説明できる人はいますか？",
+        "変数がどのように関連しているかに注目してください。",
+        "この原理は多くの実際の状況に適用されます。",
+        "素晴らしい質問です！この概念を実演させてください。",
+        "物理学は私たちの周りの世界を理解するのに役立ちます。"
+    ],
+    'zh-CN': [
+        "让我们一起探索这个迷人的概念！",
+        "有人能解释这个公式的含义吗？",
+        "注意变量之间是如何相互关联的。",
+        "这个原理适用于许多现实世界的情况。",
+        "很好的问题！让我演示这个概念。",
+        "物理学帮助我们理解周围的世界。"
+    ]
+};
+
+let currentLessonIndex = 0;
+
+function startLesson() {
+    lessonStarted = true;
+    lessonTime = 0;
+    
+    // Update lesson progress
+    updateLessonProgress();
+    
+    // Start timer
+    lessonInterval = setInterval(() => {
+        lessonTime++;
+        updateLessonTime();
+        updateLessonProgress();
+    }, 1000);
+    
+    // Animate teacher speech
+    animateTeacherSpeech();
+    
+    // Update button
+    event.target.innerHTML = '<i class="fas fa-pause"></i> Lesson in Progress';
+    event.target.disabled = true;
+    
+    // Auto-advance lesson phases
+    setTimeout(() => {
+        document.getElementById('lesson-phase').textContent = 'Explanation';
+        updateProgressBar(50);
+    }, 10000);
+    
+    setTimeout(() => {
+        document.getElementById('lesson-phase').textContent = 'Practice';
+        updateProgressBar(75);
+    }, 20000);
+    
+    setTimeout(() => {
+        document.getElementById('lesson-phase').textContent = 'Summary';
+        updateProgressBar(100);
+        endLesson();
+    }, 30000);
+}
+
+function askQuestion() {
+    const questions = [
+        "What happens when we increase the mass?",
+        "Can you give me a real-world example?",
+        "How does this relate to our previous lesson?",
+        "What would happen if we changed this variable?"
+    ];
+    
+    const randomQuestion = questions[Math.floor(Math.random() * questions.length)];
+    updateTeacherSpeech(randomQuestion);
+    
+    // Animate a random student raising hand
+    const students = document.querySelectorAll('.student');
+    const randomStudent = students[Math.floor(Math.random() * students.length)];
+    randomStudent.style.animation = 'studentBob 0.5s ease-in-out 3';
+    
+    setTimeout(() => {
+        randomStudent.style.animation = 'studentBob 3s ease-in-out infinite';
+    }, 1500);
+}
+
+function changeLesson() {
+    currentLessonIndex = (currentLessonIndex + 1) % lessons.length;
+    const lesson = lessons[currentLessonIndex];
+    
+    document.getElementById('lesson-title').textContent = lesson.title;
+    document.getElementById('current-formula').textContent = lesson.formula;
+    
+    const pointsList = document.getElementById('lesson-points');
+    pointsList.innerHTML = '';
+    lesson.points.forEach(point => {
+        const li = document.createElement('li');
+        li.textContent = point;
+        pointsList.appendChild(li);
+    });
+    
+    updateTeacherSpeech(`Now let's learn about ${lesson.title}!`);
+}
+
+function showExperiment() {
+    const experiments = [
+        "Let's drop two objects of different masses!",
+        "Watch what happens when we apply force!",
+        "Observe how energy transforms in this system!",
+        "See how waves propagate through this medium!"
+    ];
+    
+    const randomExperiment = experiments[Math.floor(Math.random() * experiments.length)];
+    updateTeacherSpeech(randomExperiment);
+    
+    // Add visual effect
+    const classroom = document.querySelector('.classroom');
+    classroom.style.background = 'linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4)';
+    classroom.style.backgroundSize = '400% 400%';
+    classroom.style.animation = 'experimentGlow 2s ease-in-out';
+    
+    setTimeout(() => {
+        classroom.style.background = '#f8f9fa';
+        classroom.style.animation = '';
+    }, 2000);
+}
+
+function updateTeacherSpeech(text) {
+    const speechBubble = document.getElementById('teacher-speech');
+    speechBubble.textContent = text;
+    speechBubble.style.opacity = '1';
+    speechBubble.style.animation = 'speechAppear 4s ease-in-out';
+    
+    setTimeout(() => {
+        speechBubble.style.opacity = '0';
+    }, 4000);
+}
+
+function animateTeacherSpeech() {
+    if (!lessonStarted) return;
+    
+    const randomPhrase = teacherPhrases[Math.floor(Math.random() * teacherPhrases.length)];
+    updateTeacherSpeech(randomPhrase);
+    
+    setTimeout(animateTeacherSpeech, 8000 + Math.random() * 4000);
+}
+
+function updateLessonTime() {
+    const minutes = Math.floor(lessonTime / 60);
+    const seconds = lessonTime % 60;
+    document.getElementById('lesson-time').textContent = 
+        `${minutes}:${seconds.toString().padStart(2, '0')}`;
+}
+
+function updateLessonProgress() {
+    const progress = Math.min((lessonTime / 30) * 100, 100);
+    updateProgressBar(progress);
+}
+
+function updateProgressBar(percentage) {
+    const progressBar = document.getElementById('lesson-progress');
+    progressBar.style.width = percentage + '%';
+    progressBar.textContent = Math.round(percentage) + '%';
+}
+
+function endLesson() {
+    lessonStarted = false;
+    clearInterval(lessonInterval);
+    
+    const startButton = document.querySelector('.classroom-controls .btn-primary');
+    startButton.innerHTML = '<i class="fas fa-play"></i> Start New Lesson';
+    startButton.disabled = false;
+    
+    updateTeacherSpeech("Great job everyone! See you next class!");
+}
+
+// Add experiment glow animation
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes experimentGlow {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+`;
+document.head.appendChild(style);
+
+// Nigerian Deep Male Voice Speech Synthesis
+function speakText(text, language = null) {
+    if (!autoSpeak) return;
+    
+    // Stop any current speech
+    if (currentSpeech) {
+        speechSynthesis.cancel();
+    }
+    
+    const selectedLanguage = language || document.getElementById('language-select').value;
+    const volume = document.getElementById('volume-slider').value / 100;
+    
+    if ('speechSynthesis' in window) {
+        currentSpeech = new SpeechSynthesisUtterance(text);
+        
+        // Configure for Nigerian Deep Male Voice
+        if (selectedLanguage === 'en-NG') {
+            currentSpeech.lang = 'en-US'; // Fallback to US English
+            currentSpeech.pitch = 0.7; // Deep male voice (lower pitch)
+            currentSpeech.rate = 0.8; // Slower, more authoritative pace
+        } else {
+            currentSpeech.lang = selectedLanguage;
+            currentSpeech.pitch = 0.8; // Still deep for other languages
+            currentSpeech.rate = 0.85;
+        }
+        
+        currentSpeech.volume = volume;
+        
+        // Try to select a deep male voice if available
+        const voices = speechSynthesis.getVoices();
+        const maleVoices = voices.filter(voice => 
+            voice.name.toLowerCase().includes('male') || 
+            voice.name.toLowerCase().includes('david') ||
+            voice.name.toLowerCase().includes('mark') ||
+            voice.name.toLowerCase().includes('alex') ||
+            voice.name.toLowerCase().includes('daniel') ||
+            voice.name.toLowerCase().includes('microsoft') && voice.name.toLowerCase().includes('mark')
+        );
+        
+        // Prefer English male voices
+        const englishMaleVoices = maleVoices.filter(voice => 
+            voice.lang.startsWith('en')
+        );
+        
+        if (englishMaleVoices.length > 0) {
+            currentSpeech.voice = englishMaleVoices[0];
+        } else if (maleVoices.length > 0) {
+            currentSpeech.voice = maleVoices[0];
+        }
+        
+        // Add visual feedback
+        const teacher = document.getElementById('teacher');
+        teacher.classList.add('speaking');
+        
+        currentSpeech.onstart = () => {
+            console.log('Engineer Clement Ekelemchi is speaking...');
+        };
+        
+        currentSpeech.onend = () => {
+            teacher.classList.remove('speaking');
+            currentSpeech = null;
+        };
+        
+        currentSpeech.onerror = () => {
+            teacher.classList.remove('speaking');
+            currentSpeech = null;
+        };
+        
+        speechSynthesis.speak(currentSpeech);
+    }
+}
+
+function stopSpeaking() {
+    if (speechSynthesis.speaking) {
+        speechSynthesis.cancel();
+    }
+    const teacher = document.getElementById('teacher');
+    teacher.classList.remove('speaking');
+    currentSpeech = null;
+}
+
+function toggleAutoSpeak() {
+    autoSpeak = !autoSpeak;
+    const status = document.getElementById('auto-speak-status');
+    const icon = document.getElementById('auto-speak-icon');
+    
+    if (autoSpeak) {
+        status.textContent = 'ON';
+        icon.className = 'fas fa-microphone';
+    } else {
+        status.textContent = 'OFF';
+        icon.className = 'fas fa-microphone-slash';
+        stopSpeaking();
+    }
+}
+
+function testSpeech() {
+    const language = document.getElementById('language-select').value;
+    const testPhrases = {
+        'en-US': 'Hello! This is a test of the speech system.',
+        'es-ES': '¡Hola! Esta es una prueba del sistema de voz.',
+        'fr-FR': 'Bonjour! Ceci est un test du système vocal.',
+        'de-DE': 'Hallo! Dies ist ein Test des Sprachsystems.',
+        'pt-BR': 'Olá! Este é um teste do sistema de fala.',
+        'ja-JP': 'こんにちは！これは音声システムのテストです。',
+        'zh-CN': '你好！这是语音系统的测试。',
+        'it-IT': 'Ciao! Questo è un test del sistema vocale.',
+        'ru-RU': 'Привет! Это тест речевой системы.',
+        'ko-KR': '안녕하세요! 이것은 음성 시스템 테스트입니다.',
+        'ar-SA': 'مرحبا! هذا اختبار لنظام الكلام.',
+        'hi-IN': 'नमस्ते! यह वाक् प्रणाली का परीक्षण है।'
+    };
+    
+    const testText = testPhrases[language] || testPhrases['en-US'];
+    speakText(testText, language);
+}
+
+// Update volume display
+document.getElementById('volume-slider').addEventListener('input', function() {
+    document.getElementById('volume-display').textContent = this.value + '%';
+});
+
+// Enhanced updateTeacherSpeech function
+function updateTeacherSpeech(text) {
+    const speechBubble = document.getElementById('teacher-speech');
+    speechBubble.textContent = text;
+    speechBubble.style.opacity = '1';
+    speechBubble.style.animation = 'speechAppear 6s ease-in-out';
+    
+    // Speak the text with selected language
+    const selectedLanguage = document.getElementById('language-select').value;
+    speakText(text, selectedLanguage);
+    
+    setTimeout(() => {
+        speechBubble.style.opacity = '0';
+    }, 6000);
+}
+
+// Enhanced animateTeacherSpeech function
+function animateTeacherSpeech() {
+    if (!lessonStarted) return;
+    
+    const language = document.getElementById('language-select').value;
+    const languageCode = language.split('-')[0] + '-' + language.split('-')[1];
+    const phrases = teacherPhrases[languageCode] || teacherPhrases['en-US'];
+    const randomPhrase = phrases[Math.floor(Math.random() * phrases.length)];
+    
+    updateTeacherSpeech(randomPhrase);
+    
+    setTimeout(animateTeacherSpeech, 12000 + Math.random() * 6000);
+}
+
+// Enhanced changeLesson function
+function changeLesson() {
+    currentLessonIndex = (currentLessonIndex + 1) % lessons.length;
+    const lesson = lessons[currentLessonIndex];
+    const language = document.getElementById('language-select').value;
+    const languageCode = language.split('-')[0] + '-' + language.split('-')[1];
+    
+    // Use translated content if available
+    const translation = lesson.translations && lesson.translations[languageCode];
+    const title = translation ? translation.title : lesson.title;
+    const points = translation ? translation.points : lesson.points;
+    
+    document.getElementById('lesson-title').textContent = title;
+    document.getElementById('current-formula').textContent = lesson.formula;
+    
+    // Update formula meaning if available
+    if (lesson.meaning) {
+        document.getElementById('formula-meaning').textContent = lesson.meaning;
+    }
+    
+    const pointsList = document.getElementById('lesson-points');
+    pointsList.innerHTML = '';
+    points.forEach(point => {
+        const li = document.createElement('li');
+        li.textContent = point;
+        pointsList.appendChild(li);
+    });
+    
+    // Update JAMB question
+    updateJambQuestion(lesson.jambQuestion);
+    
+    const announceText = language === 'en-NG' ? 
+        `Excellent! Now we shall learn about ${title}. Pay close attention to this important topic.` :
+        `Now let's learn about ${title}!`;
+    updateTeacherSpeech(announceText);
+}
+
+// Function to update JAMB question
+function updateJambQuestion(jambQuestion) {
+    if (jambQuestion) {
+        document.getElementById('current-question').textContent = jambQuestion.question;
+        
+        const optionsContainer = document.getElementById('question-options');
+        optionsContainer.innerHTML = '';
+        
+        jambQuestion.options.forEach((option, index) => {
+            const optionDiv = document.createElement('div');
+            optionDiv.className = 'option';
+            optionDiv.textContent = option;
+            optionDiv.onclick = () => selectAnswer(index, jambQuestion.correct, jambQuestion.explanation);
+            optionsContainer.appendChild(optionDiv);
+        });
+        
+        // Hide answer section initially
+        document.getElementById('answer-section').style.display = 'none';
+    }
+}
+
+// Function to handle answer selection
+function selectAnswer(selectedIndex, correctIndex, explanation) {
+    const options = document.querySelectorAll('.option');
+    options.forEach((option, index) => {
+        option.onclick = null; // Disable further clicks
+        if (index === correctIndex) {
+            option.classList.add('correct');
+        } else if (index === selectedIndex && index !== correctIndex) {
+            option.classList.add('wrong');
+        }
+    });
+    
+    // Show answer section
+    const answerSection = document.getElementById('answer-section');
+    answerSection.style.display = 'block';
+    answerSection.querySelector('.explanation').textContent = explanation;
+    
+    // Teacher explains the answer
+    const resultText = selectedIndex === correctIndex ? 
+        "Excellent! That's correct. " + explanation :
+        "Not quite right. The correct answer is: " + explanation;
+    
+    setTimeout(() => {
+        updateTeacherSpeech(resultText);
+    }, 1000);
+}
+
+// Initialize with first lesson
+changeLesson();
+
+// Quick Action Functions
+function explainFormula() {
+    const currentFormula = document.getElementById('current-formula').textContent;
+    const explanations = {
+        'F = ma': "This formula, F equals m times a, tells us that Force equals Mass multiplied by Acceleration. As Engineer Clement Ekelemchi, I want you to understand that the greater the mass or acceleration, the greater the force required.",
+        'KE = ½mv²': "This is the kinetic energy formula! Kinetic Energy equals one-half times mass times velocity squared. This shows us how much energy an object has due to its motion.",
+        'v = fλ': "For waves, velocity equals frequency times wavelength. This fundamental relationship governs all wave phenomena - from sound waves to light waves.",
+        'PV = nRT': "The ideal gas law! Pressure times Volume equals the number of moles times the gas constant times Temperature. This helps us understand gas behavior."
+    };
+    
+    const explanation = explanations[currentFormula] || "Let me explain this formula in detail for you.";
+    updateTeacherSpeech(`Now, as your instructor Engineer Clement Ekelemchi, let me explain this formula clearly. ${explanation}`);
+}
+
+function giveExample() {
+    const currentTopic = document.getElementById('lesson-title').textContent;
+    const examples = {
+        "Newton's Laws of Motion": "For example, when you push a car, the harder you push (more force), the faster it accelerates. And when you walk forward, you push back on the ground, and the ground pushes you forward - that's Newton's third law!",
+        "Energy Conservation": "Think about a football player kicking a ball. The kinetic energy from the player's leg transfers to the ball, making it move. Energy is never lost, only transferred!",
+        "Wave Properties": "Consider the waves on Lagos lagoon. The faster the wind (higher frequency), the more waves you see. Or think about radio waves - different stations have different frequencies!",
+        "Thermodynamics": "When you pump air into a bicycle tire, you're increasing pressure in a fixed volume. The tire gets warm because you're adding energy to the gas molecules!"
+    };
+    
+    const example = examples[currentTopic] || "Let me give you a practical example from our everyday life.";
+    updateTeacherSpeech(`Here's a good example to understand this concept: ${example}`);
+}
+
+function reviewLesson() {
+    const currentTopic = document.getElementById('lesson-title').textContent;
+    updateTeacherSpeech(`Let us review what we have learned about ${currentTopic}. Remember the key points I mentioned earlier, and think about how this applies to real situations.`);
+}
+
+function nextLesson() {
+    changeLesson();
+    updateTeacherSpeech("Excellent! Now we move to our next topic. Pay close attention as we explore this new concept together.");
+}
+
+// Enhanced volume display update
+document.getElementById('volume-slider').addEventListener('input', function() {
+    const volume = this.value;
+    document.getElementById('volume-display').textContent = volume + '%';
+    
+    // Give audio feedback when adjusting volume
+    if (volume > 80) {
+        // High volume - brief confirmation
+        if (!speechSynthesis.speaking) {
+            speakText("Volume is high and clear!", 'en-NG');
+        }
+    }
+});
+
+// Initialize speech synthesis voices (wait for voices to load)
+if ('speechSynthesis' in window) {
+    speechSynthesis.onvoiceschanged = function() {
+        console.log('Speech synthesis voices loaded');
+        // Auto-select Nigerian English if available
+        const voices = speechSynthesis.getVoices();
+        console.log('Available voices:', voices.map(v => v.name + ' (' + v.lang + ')'));
+    };
+}
+
+// Function to solve JAMB question
+function solveJambQuestion() {
+    const lesson = lessons[currentLessonIndex];
+    if (lesson.jambQuestion) {
+        const question = lesson.jambQuestion;
+        const correctOption = question.options[question.correct];
+        
+        // Highlight correct answer
+        const options = document.querySelectorAll('.option');
+        options.forEach((option, index) => {
+            if (index === question.correct) {
+                option.classList.add('correct');
+            }
+        });
+        
+        // Show answer section
+        const answerSection = document.getElementById('answer-section');
+        answerSection.style.display = 'block';
+        
+        // Teacher explains the solution
+        const solutionText = `Let me solve this JAMB question step by step. ${question.explanation}. The correct answer is ${correctOption}.`;
+        updateTeacherSpeech(solutionText);
+    }
+}
+
+// Language change handler
+document.getElementById('language-select').addEventListener('change', function() {
+    const selectedLanguage = this.value;
+    const welcomeMessages = {
+        'en-NG': "Language changed to Nigerian English. I am Engineer Clement Ekelemchi, ready to teach physics!",
+        'en-US': "Language changed to American English. Let's explore physics together!",
+        'en-GB': "Language changed to British English. Shall we begin our physics lesson?",
+        'fr-FR': "Langue changée en français. Explorons la physique ensemble!",
+        'es-ES': "Idioma cambiado a español. ¡Exploremos la física juntos!"
+    };
+    
+    const message = welcomeMessages[selectedLanguage] || welcomeMessages['en-US'];
+    updateTeacherSpeech(message);
+});
+
+// Initialize date display
+document.getElementById('class-date').textContent = new Date().toLocaleDateString();
+
+// AI Tutor Integration
+function openAITutor() {
+    // Create modal for AI Tutor
+    const modal = document.createElement('div');
+    modal.className = 'modal fade';
+    modal.id = 'aiTutorModal';
+    modal.innerHTML = `
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-robot"></i> AI Physics Tutor</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Ask Engineer Clement Ekelemchi:</label>
+                        <input type="text" id="ai-question" class="form-control" placeholder="What physics question do you have?" onkeypress="handleAIKeyPress(event)">
+                    </div>
+                    <div id="ai-response" class="alert alert-info" style="display: none;"></div>
+                    <div class="d-flex gap-2 flex-wrap">
+                        <button class="btn btn-outline-primary btn-sm" onclick="askAI('Explain this formula')">Explain Formula</button>
+                        <button class="btn btn-outline-success btn-sm" onclick="askAI('Give me an example')">Give Example</button>
+                        <button class="btn btn-outline-warning btn-sm" onclick="askAI('JAMB tips for this topic')">JAMB Tips</button>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="askAI()">Ask AI Tutor</button>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    const modalInstance = new bootstrap.Modal(modal);
+    modalInstance.show();
+    
+    // Clean up modal when closed
+    modal.addEventListener('hidden.bs.modal', () => {
+        document.body.removeChild(modal);
+    });
+}
+
+function handleAIKeyPress(event) {
+    if (event.key === 'Enter') {
+        askAI();
+    }
+}
+
+function askAI(predefinedQuestion = null) {
+    const questionInput = document.getElementById('ai-question');
+    const question = predefinedQuestion || questionInput.value.trim();
+    
+    if (!question) return;
+    
+    const responseDiv = document.getElementById('ai-response');
+    responseDiv.style.display = 'block';
+    responseDiv.innerHTML = '<i class="fas fa-spinner fa-spin"></i> AI Tutor is thinking...';
+    
+    // Add current lesson context to the question
+    const currentTopic = document.getElementById('lesson-title').textContent;
+    const contextualQuestion = `About ${currentTopic}: ${question}`;
+    
+    fetch('/api/ai-tutor', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ question: contextualQuestion })
+    })
+    .then(response => response.json())
+    .then(data => {
+        responseDiv.innerHTML = `
+            <strong><i class="fas fa-user-tie"></i> Engineer Clement Ekelemchi:</strong><br>
+            ${data.response}
+        `;
+        
+        // Speak the response
+        updateTeacherSpeech(data.response);
+    })
+    .catch(error => {
+        responseDiv.innerHTML = '<strong>Error:</strong> Sorry, I encountered an issue. Please try again.';
+    });
+    
+    if (!predefinedQuestion) {
+        questionInput.value = '';
+    }
+}
+
+// Mistake Prediction System for Classroom
+function activateMistakePredictor() {
+    updateTeacherSpeech("Excellent! I'm now activating my mistake prediction system. I'll watch how you answer questions and predict what mistakes you might make before you make them. This will help me guide you better. Let's start with a question!");
+    
+    // Show a practice question to start prediction
+    setTimeout(() => {
+        const currentLesson = lessons[currentLessonIndex];
+        const question = currentLesson.jambQuestion;
+        
+        if (question) {
+            updateTeacherSpeech(`Here's a practice question: ${question.question}. Think carefully before answering - I'm watching for patterns that might indicate potential mistakes!`);
+            
+            // Activate mistake prediction mode
+            document.body.classList.add('mistake-prediction-active');
+            
+            // Show prediction interface
+            showMistakePredictionInterface();
+        }
+    }, 3000);
+}
+
+function showMistakePredictionInterface() {
+    // Create prediction interface overlay
+    const predictionInterface = document.createElement('div');
+    predictionInterface.id = 'mistake-prediction-interface';
+    predictionInterface.className = 'prediction-overlay';
+    predictionInterface.innerHTML = `
+        <div class="prediction-panel">
+            <div class="prediction-header">
+                <h6><i class="fas fa-crystal-ball"></i> Mistake Prediction System Active</h6>
+                <button class="btn btn-sm btn-outline-secondary" onclick="closePredictionInterface()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="prediction-content">
+                <div class="prediction-status">
+                    <div class="mb-2">
+                        <label class="form-label">Prediction Confidence:</label>
+                        <div class="progress">
+                            <div class="progress-bar bg-warning" id="classroom-prediction-confidence" style="width: 0%">0%</div>
+                        </div>
+                    </div>
+                    <div class="prediction-alerts" id="classroom-prediction-alerts" style="display: none;">
+                        <div class="alert alert-warning alert-sm">
+                            <strong><i class="fas fa-exclamation-triangle"></i> Predicted Issue:</strong>
+                            <span id="classroom-predicted-mistake">Analyzing your patterns...</span>
+                        </div>
+                    </div>
+                    <div class="prediction-tips">
+                        <small class="text-muted">Answer questions to activate predictions!</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(predictionInterface);
+    
+    // Start monitoring student interactions
+    startMistakeMonitoring();
+}
+
+function closePredictionInterface() {
+    const interface = document.getElementById('mistake-prediction-interface');
+    if (interface) {
+        interface.remove();
+    }
+    document.body.classList.remove('mistake-prediction-active');
+}
+
+function startMistakeMonitoring() {
+    // Monitor option clicks for mistake patterns
+    const options = document.querySelectorAll('.option');
+    options.forEach((option, index) => {
+        option.addEventListener('click', function() {
+            analyzeMistakePattern(index, this.textContent);
+        });
+    });
+}
+
+function analyzeMistakePattern(selectedIndex, selectedText) {
+    const currentLesson = lessons[currentLessonIndex];
+    const question = currentLesson.jambQuestion;
+    
+    if (!question) return;
+    
+    const isCorrect = selectedIndex === question.correct;
+    const responseTime = Math.random() * 10 + 5; // Simulate response time
+    
+    // Analyze the mistake pattern
+    const mistakeAnalysis = {
+        hasError: !isCorrect,
+        errorType: 'none',
+        confidence: 0
+    };
+    
+    if (!isCorrect) {
+        // Determine mistake type based on question and answer
+        if (currentLesson.title.includes('Force') || currentLesson.title.includes('Newton')) {
+            mistakeAnalysis.errorType = 'force_calculation';
+            mistakeAnalysis.confidence = 75;
+        } else if (currentLesson.title.includes('Energy')) {
+            mistakeAnalysis.errorType = 'energy_confusion';
+            mistakeAnalysis.confidence = 80;
+        } else if (currentLesson.title.includes('Wave')) {
+            mistakeAnalysis.errorType = 'wave_formula';
+            mistakeAnalysis.confidence = 70;
+        } else {
+            mistakeAnalysis.errorType = 'calculation_error';
+            mistakeAnalysis.confidence = 65;
+        }
+        
+        // Show prediction
+        showClassroomMistakePrediction(mistakeAnalysis);
+        
+        // Provide preventive guidance
+        setTimeout(() => {
+            providePreventiveGuidance(mistakeAnalysis);
+        }, 2000);
+    } else {
+        // Correct answer - update confidence positively
+        updateClassroomPredictionConfidence(85);
+        updateTeacherSpeech("Excellent! You're getting better at avoiding common mistakes. Keep up the good work!");
+    }
+}
+
+function showClassroomMistakePrediction(analysis) {
+    const alertsDiv = document.getElementById('classroom-prediction-alerts');
+    const mistakeSpan = document.getElementById('classroom-predicted-mistake');
+    const confidenceBar = document.getElementById('classroom-prediction-confidence');
+    
+    const predictions = {
+        'force_calculation': 'You might confuse mass and weight in the next force problem',
+        'energy_confusion': 'Watch out for mixing kinetic and potential energy concepts',
+        'wave_formula': 'Be careful with frequency vs wavelength in wave problems',
+        'calculation_error': 'Double-check your arithmetic in the next calculation'
+    };
+    
+    const prediction = predictions[analysis.errorType] || 'Be more careful with the next question';
+    
+    mistakeSpan.textContent = prediction;
+    confidenceBar.style.width = analysis.confidence + '%';
+    confidenceBar.textContent = analysis.confidence + '%';
+    
+    alertsDiv.style.display = 'block';
+    
+    // Auto-hide after 8 seconds
+    setTimeout(() => {
+        alertsDiv.style.display = 'none';
+    }, 8000);
+}
+
+function updateClassroomPredictionConfidence(confidence) {
+    const confidenceBar = document.getElementById('classroom-prediction-confidence');
+    if (confidenceBar) {
+        confidenceBar.style.width = confidence + '%';
+        confidenceBar.textContent = confidence + '%';
+    }
+}
+
+function providePreventiveGuidance(analysis) {
+    const guidance = {
+        'force_calculation': "Remember: Mass is measured in kg, Force is measured in Newtons (N). Don't confuse weight with mass!",
+        'energy_confusion': "Think carefully: Kinetic energy is energy of motion (½mv²), Potential energy is stored energy (mgh).",
+        'wave_formula': "Remember the wave equation: v = fλ. Velocity equals frequency times wavelength.",
+        'calculation_error': "Take your time with calculations. Break complex problems into smaller steps."
+    };
+    
+    const message = guidance[analysis.errorType] || "Think carefully about your approach to the next problem.";
+    updateTeacherSpeech(`Let me give you some guidance: ${message}`);
+}
+
+// Add CSS for prediction interface
+const predictionStyles = document.createElement('style');
+predictionStyles.textContent = `
+.prediction-overlay {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    width: 300px;
+}
+
+.prediction-panel {
+    background: white;
+    border: 2px solid #ffc107;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    overflow: hidden;
+}
+
+.prediction-header {
+    background: #ffc107;
+    color: #000;
+    padding: 10px 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.prediction-header h6 {
+    margin: 0;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.prediction-content {
+    padding: 15px;
+}
+
+.prediction-status .progress {
+    height: 20px;
+}
+
+.prediction-alerts .alert {
+    margin-bottom: 10px;
+    padding: 8px 12px;
+    font-size: 12px;
+}
+
+.mistake-prediction-active .classroom {
+    border: 3px solid #ffc107;
+    box-shadow: 0 0 20px rgba(255, 193, 7, 0.5);
+}
+
+@media (max-width: 768px) {
+    .prediction-overlay {
+        position: relative;
+        width: 100%;
+        margin-top: 20px;
+        right: auto;
+        top: auto;
+    }
+}
+`;
+document.head.appendChild(predictionStyles);erface() {
+    // Create prediction overlay
+    const overlay = document.createElement('div');
+    overlay.className = 'mistake-prediction-overlay';
+    overlay.innerHTML = `
+        <div class="prediction-panel">
+            <h6><i class="fas fa-crystal-ball"></i> Mistake Prediction Active</h6>
+            <div class="prediction-status">
+                <div class="mb-2">
+                    <small>Prediction Confidence:</small>
+                    <div class="progress progress-sm">
+                        <div class="progress-bar bg-warning" id="classroom-prediction-confidence" style="width: 0%">0%</div>
+                    </div>
+                </div>
+                <div class="prediction-alert" id="classroom-prediction-alert" style="display: none;">
+                    <small><strong>⚠️ Predicted Issue:</strong> <span id="classroom-predicted-mistake"></span></small>
+                </div>
+            </div>
+            <button class="btn btn-sm btn-outline-secondary" onclick="closePredictionInterface()">
+                <i class="fas fa-times"></i> Close
+            </button>
+        </div>
+    `;
+    
+    document.body.appendChild(overlay);
+}
+
+function closePredictionInterface() {
+    const overlay = document.querySelector('.mistake-prediction-overlay');
+    if (overlay) {
+        overlay.remove();
+    }
+    document.body.classList.remove('mistake-prediction-active');
+}
+
+function predictClassroomMistake(questionType, studentBehavior) {
+    const predictions = {
+        'force': [
+            "Student likely to confuse mass and weight",
+            "May forget to consider direction of forces",
+            "Probably won't draw free body diagram"
+        ],
+        'energy': [
+            "Student might mix up kinetic and potential energy",
+            "May violate conservation of energy",
+            "Likely to forget to square velocity in KE formula"
+        ],
+        'wave': [
+            "Student probably will confuse frequency and period",
+            "May mix up wavelength and amplitude",
+            "Likely to forget wave speed formula v = fλ"
+        ]
+    };
+    
+    const questionPredictions = predictions[questionType] || ["Watch for calculation errors"];
+    const prediction = questionPredictions[Math.floor(Math.random() * questionPredictions.length)];
+    
+    // Show prediction in classroom interface
+    const alertDiv = document.getElementById('classroom-prediction-alert');
+    const predictionText = document.getElementById('classroom-predicted-mistake');
+    const confidenceBar = document.getElementById('classroom-prediction-confidence');
+    
+    if (alertDiv && predictionText && confidenceBar) {
+        predictionText.textContent = prediction;
+        confidenceBar.style.width = '75%';
+        confidenceBar.textContent = '75%';
+        alertDiv.style.display = 'block';
+        
+        // Speak the prediction
+        updateTeacherSpeech(`I predict you might ${prediction.toLowerCase()}. Let me help you avoid this mistake!`);
+    }
+}
+
+// Auto-start with Nigerian voice introduction
+setTimeout(() => {
+    updateTeacherSpeech("Good day, class! Welcome to Smart Physics Hub! I am Engineer Clement Ekelemchi, your advanced AI physics instructor. I can predict mistakes before you make them and adapt my teaching to your learning style. Today we shall explore the fascinating world of physics together. Are you ready to learn?");
+}, 2000);
+</script>
+{% endblock %}

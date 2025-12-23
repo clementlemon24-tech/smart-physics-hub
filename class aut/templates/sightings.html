@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}Sightings - Pest Tracker{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-8">
+        <h1><i class="fas fa-eye"></i> Pest Sightings</h1>
+    </div>
+    <div class="col-md-4 text-end">
+        <a href="{{ url_for('add_sighting') }}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Report Sighting
+        </a>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        {% if sightings %}
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Date & Time</th>
+                        <th>Pest</th>
+                        <th>Type</th>
+                        <th>Location</th>
+                        <th>Severity</th>
+                        <th>Description</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for sighting in sightings|reverse %}
+                    <tr>
+                        <td>{{ sighting.sighting_date.strftime('%Y-%m-%d %H:%M') }}</td>
+                        <td>{{ sighting.pest.name }}</td>
+                        <td>
+                            <span class="badge bg-secondary">{{ sighting.pest.pest_type.value.title() }}</span>
+                        </td>
+                        <td>{{ sighting.location.name }}</td>
+                        <td>
+                            <span class="badge 
+                                {% if sighting.severity.value == 'critical' %}bg-danger
+                                {% elif sighting.severity.value == 'high' %}bg-warning
+                                {% elif sighting.severity.value == 'medium' %}bg-info
+                                {% else %}bg-success{% endif %}">
+                                {{ sighting.severity.value.title() }}
+                            </span>
+                        </td>
+                        <td>{{ sighting.description }}</td>
+                        <td>
+                            <a href="{{ url_for('add_treatment') }}?sighting_id={{ sighting.id }}" 
+                               class="btn btn-sm btn-outline-primary">
+                                <i class="fas fa-medkit"></i> Treat
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="text-center mt-5">
+            <i class="fas fa-eye fa-3x text-muted mb-3"></i>
+            <h3>No sightings reported yet</h3>
+            <p class="text-muted">Start tracking pest activity by reporting your first sighting.</p>
+            <a href="{{ url_for('add_sighting') }}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Report First Sighting
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

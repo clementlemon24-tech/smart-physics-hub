@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block title %}Schedule Treatment - Pest Tracker{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-medkit"></i> Schedule Treatment</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="mb-3">
+                        <label for="sighting_id" class="form-label">Pest Sighting *</label>
+                        <select class="form-select" id="sighting_id" name="sighting_id" required>
+                            <option value="">Select a sighting to treat...</option>
+                            {% for sighting in sightings %}
+                            <option value="{{ sighting.id }}">
+                                {{ sighting.pest.name }} at {{ sighting.location.name }} 
+                                ({{ sighting.sighting_date.strftime('%Y-%m-%d') }}) - {{ sighting.severity.value.title() }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="method" class="form-label">Treatment Method *</label>
+                        <select class="form-select" id="method" name="method" required>
+                            <option value="">Select treatment method...</option>
+                            <option value="Bait stations">Bait stations</option>
+                            <option value="Gel bait application">Gel bait application</option>
+                            <option value="Spray treatment">Spray treatment</option>
+                            <option value="Traps">Traps</option>
+                            <option value="Fumigation">Fumigation</option>
+                            <option value="Exclusion/sealing">Exclusion/sealing</option>
+                            <option value="Heat treatment">Heat treatment</option>
+                            <option value="Integrated pest management">Integrated pest management</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="scheduled_date" class="form-label">Scheduled Date *</label>
+                        <input type="date" class="form-control" id="scheduled_date" name="scheduled_date" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="cost" class="form-label">Estimated Cost</label>
+                        <div class="input-group">
+                            <span class="input-group-text">$</span>
+                            <input type="number" step="0.01" class="form-control" id="cost" name="cost" placeholder="0.00">
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{{ url_for('treatments') }}" class="btn btn-secondary me-md-2">Cancel</a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Schedule Treatment
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if not sightings %}
+<div class="alert alert-warning mt-3">
+    <h6>No Sightings Available:</h6>
+    <p>You need to <a href="{{ url_for('add_sighting') }}">report pest sightings</a> before scheduling treatments.</p>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Set default date to tomorrow
+document.addEventListener('DOMContentLoaded', function() {
+    const dateInput = document.getElementById('scheduled_date');
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    dateInput.value = tomorrow.toISOString().split('T')[0];
+});
+</script>
+{% endblock %}

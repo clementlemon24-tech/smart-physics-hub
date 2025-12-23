@@ -1,0 +1,927 @@
+{% extends "base.html" %}
+
+{% block title %}AI Physics Tutor - Smart Physics Hub{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h1><i class="fas fa-robot"></i> AI Physics Tutor</h1>
+        <p class="lead">Chat with Engineer Clement Ekelemchi - Your Personal AI Physics Tutor</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <!-- Chat Interface -->
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h5><i class="fas fa-comments"></i> Chat with AI Tutor</h5>
+                <small>Ask any physics question and get instant explanations!</small>
+            </div>
+            <div class="card-body">
+                <!-- Chat Messages -->
+                <div id="chat-messages" class="chat-container mb-3" style="height: 400px; overflow-y: auto; border: 1px solid #ddd; padding: 15px; border-radius: 5px; background: #f8f9fa;">
+                    <div class="message tutor-message">
+                        <div class="message-header">
+                            <strong><i class="fas fa-user-tie"></i> Engineer Clement Ekelemchi</strong>
+                            <small class="text-muted">AI Physics Tutor</small>
+                        </div>
+                        <div class="message-content">
+                            Welcome to Smart Physics Hub! I'm your AI Physics Tutor, Engineer Clement Ekelemchi. I'm here to help you master physics concepts, solve problems, and prepare for JAMB. What would you like to learn today?
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Adaptive Learning Controls -->
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="level-select" class="form-label">Explanation Level:</label>
+                        <select id="level-select" class="form-select form-select-sm">
+                            <option value="auto">🤖 Auto-Detect</option>
+                            <option value="basic">👶 Basic (Like I'm 10)</option>
+                            <option value="intermediate">🎓 Intermediate (JAMB/WAEC)</option>
+                            <option value="advanced">🧑‍🎓 Advanced (A-Level/NECO)</option>
+                            <option value="olympiad">🏆 Olympiad Level</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="exam-focus" class="form-label">Exam Focus:</label>
+                        <select id="exam-focus" class="form-select form-select-sm">
+                            <option value="jamb">📚 JAMB</option>
+                            <option value="waec">📖 WAEC</option>
+                            <option value="neco">📝 NECO</option>
+                            <option value="olympiad">🏆 Physics Olympiad</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- Input Area -->
+                <div class="input-group">
+                    <input type="text" id="user-input" class="form-control" placeholder="Ask me any physics question..." onkeypress="handleKeyPress(event)">
+                    <button class="btn btn-primary" onclick="sendMessage()">
+                        <i class="fas fa-paper-plane"></i> Send
+                    </button>
+                </div>
+                
+                <!-- Adaptive Quick Questions -->
+                <div class="mt-3">
+                    <h6>Smart Questions (Adapts to Your Level):</h6>
+                    <div class="d-flex flex-wrap gap-2 mb-2">
+                        <button class="btn btn-outline-success btn-sm" onclick="askAdaptiveQuestion('force')">🔧 Force & Motion</button>
+                        <button class="btn btn-outline-info btn-sm" onclick="askAdaptiveQuestion('energy')">⚡ Energy</button>
+                        <button class="btn btn-outline-warning btn-sm" onclick="askAdaptiveQuestion('wave')">🌊 Waves</button>
+                        <button class="btn btn-outline-danger btn-sm" onclick="askAdaptiveQuestion('electricity')">💡 Electricity</button>
+                    </div>
+                    <div class="d-flex flex-wrap gap-2">
+                        <button class="btn btn-outline-primary btn-sm" onclick="askQuickQuestion('Explain like I\'m 10')">👶 Explain Simply</button>
+                        <button class="btn btn-outline-secondary btn-sm" onclick="askQuickQuestion('JAMB practice question')">📚 JAMB Question</button>
+                        <button class="btn btn-outline-dark btn-sm" onclick="askQuickQuestion('Olympiad level problem')">🏆 Challenge Me</button>
+                        <a href="{{ url_for('virtual_lab') }}" class="btn btn-outline-success btn-sm">🧪 Virtual Lab</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Physics Formula Reference -->
+        <div class="card mt-4">
+            <div class="card-header">
+                <h6><i class="fas fa-calculator"></i> Quick Formula Reference</h6>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>Mechanics:</h6>
+                        <ul class="list-unstyled">
+                            <li><code>F = ma</code> (Force)</li>
+                            <li><code>KE = ½mv²</code> (Kinetic Energy)</li>
+                            <li><code>PE = mgh</code> (Potential Energy)</li>
+                            <li><code>v = u + at</code> (Motion)</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Waves & Electricity:</h6>
+                        <ul class="list-unstyled">
+                            <li><code>v = fλ</code> (Wave Speed)</li>
+                            <li><code>V = IR</code> (Ohm's Law)</li>
+                            <li><code>P = VI</code> (Power)</li>
+                            <li><code>PV = nRT</code> (Gas Law)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Sidebar with Tutor Info -->
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h6><i class="fas fa-user-tie"></i> Your AI Tutor</h6>
+            </div>
+            <div class="card-body text-center">
+                <div class="tutor-avatar mb-3">
+                    <i class="fas fa-user-tie fa-4x text-primary"></i>
+                </div>
+                <h5>Engr. Clement Ekelemchi</h5>
+                <p class="text-muted">AI Physics Tutor</p>
+                <div class="tutor-stats">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="stat-item">
+                                <h6>1000+</h6>
+                                <small>Questions Answered</small>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="stat-item">
+                                <h6>24/7</h6>
+                                <small>Available</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-3">
+                    <h6>I can help with:</h6>
+                    <div class="d-flex flex-wrap gap-1">
+                        <span class="badge bg-primary">Mechanics</span>
+                        <span class="badge bg-success">Energy</span>
+                        <span class="badge bg-info">Waves</span>
+                        <span class="badge bg-warning">Electricity</span>
+                        <span class="badge bg-danger">Thermodynamics</span>
+                        <span class="badge bg-secondary">JAMB Prep</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mistake Prediction System -->
+        <div class="card mt-3">
+            <div class="card-header">
+                <h6><i class="fas fa-crystal-ball"></i> Mistake Predictor</h6>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label class="form-label">Prediction Confidence:</label>
+                    <div class="progress mb-2">
+                        <div class="progress-bar bg-warning" id="prediction-confidence" style="width: 0%">0%</div>
+                    </div>
+                    <small class="text-muted" id="prediction-text">Answer questions to activate predictions!</small>
+                </div>
+                
+                <div class="mb-3" id="mistake-alerts" style="display: none;">
+                    <div class="alert alert-warning alert-sm">
+                        <strong><i class="fas fa-exclamation-triangle"></i> Predicted Issue:</strong>
+                        <span id="predicted-mistake">No predictions yet</span>
+                    </div>
+                </div>
+                
+                <button class="btn btn-outline-warning btn-sm" onclick="requestPredictiveAssessment()">
+                    <i class="fas fa-search"></i> Analyze My Patterns
+                </button>
+            </div>
+        </div>
+        
+        <!-- Understanding Tracker -->
+        <div class="card mt-3">
+            <div class="card-header">
+                <h6><i class="fas fa-brain"></i> Learning Progress</h6>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label class="form-label">Understanding Level:</label>
+                    <div class="progress mb-2">
+                        <div class="progress-bar" id="understanding-progress" style="width: 0%">0%</div>
+                    </div>
+                    <small class="text-muted" id="understanding-text">Ask questions to track your progress!</small>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">Current Focus:</label>
+                    <span class="badge bg-primary" id="current-topic">General Physics</span>
+                </div>
+                
+                <button class="btn btn-outline-success btn-sm" onclick="requestQuickAssessment()">
+                    <i class="fas fa-clipboard-check"></i> Quick Assessment
+                </button>
+            </div>
+        </div>
+        
+        <!-- Voice Controls -->
+        <div class="card mt-3">
+            <div class="card-header">
+                <h6><i class="fas fa-volume-up"></i> Voice Settings</h6>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label class="form-label">Voice Response:</label>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="voice-enabled" checked>
+                        <label class="form-check-label" for="voice-enabled">
+                            Enable Voice Responses
+                        </label>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="voice-speed" class="form-label">Speech Speed:</label>
+                    <input type="range" class="form-range" id="voice-speed" min="0.5" max="2" step="0.1" value="0.9">
+                </div>
+                <button class="btn btn-outline-primary btn-sm" onclick="testVoice()">
+                    <i class="fas fa-play"></i> Test Voice
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.chat-container {
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+}
+
+.message {
+    margin-bottom: 15px;
+    padding: 10px;
+    border-radius: 10px;
+    max-width: 80%;
+}
+
+.tutor-message {
+    background: #e3f2fd;
+    border-left: 4px solid #2196f3;
+    margin-left: 0;
+}
+
+.user-message {
+    background: #f3e5f5;
+    border-right: 4px solid #9c27b0;
+    margin-left: auto;
+    text-align: right;
+}
+
+.message-header {
+    margin-bottom: 5px;
+}
+
+.message-content {
+    line-height: 1.5;
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-item h6 {
+    color: #2196f3;
+    margin-bottom: 2px;
+}
+
+.tutor-avatar {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.typing-indicator {
+    display: none;
+    font-style: italic;
+    color: #666;
+}
+
+.typing-indicator::after {
+    content: '...';
+    animation: dots 1.5s infinite;
+}
+
+@keyframes dots {
+    0%, 20% { content: '.'; }
+    40% { content: '..'; }
+    60%, 100% { content: '...'; }
+}
+</style>
+{% endblock %}
+
+{% block scripts %}
+<script>
+let isVoiceEnabled = true;
+let speechRate = 0.9;
+
+function handleKeyPress(event) {
+    if (event.key === 'Enter') {
+        sendMessage();
+    }
+}
+
+function sendMessage() {
+    const input = document.getElementById('user-input');
+    const message = input.value.trim();
+    
+    if (!message) return;
+    
+    // Get adaptive settings
+    const level = document.getElementById('level-select').value;
+    const examFocus = document.getElementById('exam-focus').value;
+    
+    // Add user message to chat
+    addMessage(message, 'user');
+    input.value = '';
+    
+    // Show typing indicator with adaptive context
+    showTypingIndicator(`Analyzing at ${level} level for ${examFocus.toUpperCase()}...`);
+    
+    // Send to AI tutor with adaptive parameters
+    fetch('/api/ai-tutor', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+            question: message,
+            level: level,
+            exam_focus: examFocus
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        hideTypingIndicator();
+        
+        // Add adaptive response with level indicator
+        const adaptiveResponse = `${data.response}`;
+        addMessage(adaptiveResponse, 'tutor', data.level, data.exam_focus);
+        
+        // Speak response if voice is enabled
+        if (isVoiceEnabled) {
+            speakText(data.response);
+        }
+        
+        // Auto-adjust level based on response if needed
+        if (data.level !== level && level === 'auto') {
+            document.getElementById('level-select').value = data.level;
+            showLevelAdjustment(data.level);
+        }
+    })
+    .catch(error => {
+        hideTypingIndicator();
+        addMessage('Sorry, I encountered an error. Please try again.', 'tutor');
+    });
+}
+
+function addMessage(content, sender, level = null, examFocus = null) {
+    const chatContainer = document.getElementById('chat-messages');
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `message ${sender}-message`;
+    
+    const timestamp = new Date().toLocaleTimeString();
+    
+    if (sender === 'tutor') {
+        const levelBadge = level ? `<span class="badge bg-info ms-2">${level} level</span>` : '';
+        const examBadge = examFocus ? `<span class="badge bg-success ms-1">${examFocus.toUpperCase()}</span>` : '';
+        
+        messageDiv.innerHTML = `
+            <div class="message-header">
+                <strong><i class="fas fa-user-tie"></i> Engineer Clement Ekelemchi</strong>
+                ${levelBadge}${examBadge}
+                <small class="text-muted">${timestamp}</small>
+            </div>
+            <div class="message-content">${content}</div>
+        `;
+    } else {
+        messageDiv.innerHTML = `
+            <div class="message-header">
+                <strong><i class="fas fa-user"></i> You</strong>
+                <small class="text-muted">${timestamp}</small>
+            </div>
+            <div class="message-content">${content}</div>
+        `;
+    }
+    
+    chatContainer.appendChild(messageDiv);
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+}
+
+function askAdaptiveQuestion(topic) {
+    const level = document.getElementById('level-select').value;
+    const examFocus = document.getElementById('exam-focus').value;
+    
+    const adaptiveQuestions = {
+        'force': {
+            'basic': 'Explain force like I\'m 10 years old',
+            'intermediate': `Explain Newton's laws for ${examFocus.toUpperCase()}`,
+            'advanced': 'Derive Newton\'s second law from first principles',
+            'olympiad': 'Explain force in non-inertial reference frames'
+        },
+        'energy': {
+            'basic': 'What is energy? Make it simple!',
+            'intermediate': `Energy conservation for ${examFocus.toUpperCase()} exam`,
+            'advanced': 'Derive work-energy theorem',
+            'olympiad': 'Explain Lagrangian and Hamiltonian mechanics'
+        },
+        'wave': {
+            'basic': 'How do waves work? Simple explanation',
+            'intermediate': `Wave properties for ${examFocus.toUpperCase()}`,
+            'advanced': 'Derive the wave equation',
+            'olympiad': 'Electromagnetic wave propagation in media'
+        },
+        'electricity': {
+            'basic': 'What is electricity? Kid-friendly explanation',
+            'intermediate': `Ohm\'s law and circuits for ${examFocus.toUpperCase()}`,
+            'advanced': 'Maxwell\'s equations introduction',
+            'olympiad': 'Electromagnetic field theory applications'
+        }
+    };
+    
+    const question = adaptiveQuestions[topic][level === 'auto' ? 'intermediate' : level];
+    document.getElementById('user-input').value = question;
+    sendMessage();
+}
+
+function showLevelAdjustment(newLevel) {
+    const chatContainer = document.getElementById('chat-messages');
+    const adjustmentDiv = document.createElement('div');
+    adjustmentDiv.className = 'alert alert-info alert-dismissible fade show mt-2';
+    adjustmentDiv.innerHTML = `
+        <i class="fas fa-brain"></i> <strong>Smart Adjustment:</strong> I detected you might prefer <strong>${newLevel}</strong> level explanations. 
+        I've adjusted automatically! You can change this anytime above.
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    chatContainer.appendChild(adjustmentDiv);
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+}
+
+function showTypingIndicator(customMessage = 'Typing') {
+    const chatContainer = document.getElementById('chat-messages');
+    const typingDiv = document.createElement('div');
+    typingDiv.id = 'typing-indicator';
+    typingDiv.className = 'message tutor-message typing-indicator';
+    typingDiv.innerHTML = `
+        <div class="message-header">
+            <strong><i class="fas fa-user-tie"></i> Professor Clement Ekelemchi</strong>
+        </div>
+        <div class="message-content">${customMessage}</div>
+    `;
+    chatContainer.appendChild(typingDiv);
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+}
+
+function askQuickQuestion(question) {
+    document.getElementById('user-input').value = question;
+    sendMessage();
+}
+
+function showTypingIndicator() {
+    const chatContainer = document.getElementById('chat-messages');
+    const typingDiv = document.createElement('div');
+    typingDiv.id = 'typing-indicator';
+    typingDiv.className = 'message tutor-message typing-indicator';
+    typingDiv.innerHTML = `
+        <div class="message-header">
+            <strong><i class="fas fa-user-tie"></i> Professor Clement Ekelemchi</strong>
+        </div>
+        <div class="message-content">Typing</div>
+    `;
+    chatContainer.appendChild(typingDiv);
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+}
+
+function hideTypingIndicator() {
+    const typingIndicator = document.getElementById('typing-indicator');
+    if (typingIndicator) {
+        typingIndicator.remove();
+    }
+}
+
+function speakText(text) {
+    if ('speechSynthesis' in window && isVoiceEnabled) {
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.rate = speechRate;
+        utterance.pitch = 0.8; // Deep male voice
+        utterance.volume = 0.9;
+        
+        // Try to use a male voice
+        const voices = speechSynthesis.getVoices();
+        const maleVoice = voices.find(voice => 
+            voice.name.toLowerCase().includes('male') || 
+            voice.name.toLowerCase().includes('david') ||
+            voice.name.toLowerCase().includes('mark')
+        );
+        
+        if (maleVoice) {
+            utterance.voice = maleVoice;
+        }
+        
+        speechSynthesis.speak(utterance);
+    }
+}
+
+function testVoice() {
+    speakText("Hello! I am Engineer Clement Ekelemchi, your AI Physics Tutor. How can I help you today?");
+}
+
+// Voice settings event listeners
+document.getElementById('voice-enabled').addEventListener('change', function() {
+    isVoiceEnabled = this.checked;
+});
+
+document.getElementById('voice-speed').addEventListener('input', function() {
+    speechRate = parseFloat(this.value);
+});
+
+// Understanding tracking variables
+let currentTopic = 'General Physics';
+let understandingScore = 0;
+let questionCount = 0;
+
+// Mistake prediction variables
+let studentAnswerHistory = [];
+let mistakePatterns = {};
+let predictionConfidence = 0;
+let currentQuestion = null;
+let answerStartTime = null;
+
+function updateUnderstandingProgress(topic, score) {
+    currentTopic = topic;
+    understandingScore = score;
+    
+    const progressBar = document.getElementById('understanding-progress');
+    const progressText = document.getElementById('understanding-text');
+    const topicBadge = document.getElementById('current-topic');
+    
+    progressBar.style.width = score + '%';
+    progressBar.textContent = score + '%';
+    topicBadge.textContent = topic;
+    
+    if (score >= 80) {
+        progressBar.className = 'progress-bar bg-success';
+        progressText.textContent = 'Excellent understanding! Ready for advanced topics.';
+    } else if (score >= 60) {
+        progressBar.className = 'progress-bar bg-info';
+        progressText.textContent = 'Good progress! Keep practicing.';
+    } else if (score >= 40) {
+        progressBar.className = 'progress-bar bg-warning';
+        progressText.textContent = 'Getting there! Let me explain differently.';
+    } else {
+        progressBar.className = 'progress-bar bg-danger';
+        progressText.textContent = 'Let\'s break this down into simpler steps.';
+    }
+    
+    // Auto re-teach if understanding is low
+    if (score < 50 && questionCount > 2) {
+        setTimeout(() => {
+            autoReteach(topic);
+        }, 2000);
+    }
+}
+
+function autoReteach(topic) {
+    const reteachMessage = `I notice you might need a different approach for ${topic}. Let me explain it more simply with examples you can relate to. Would you like me to start over with a basic explanation?`;
+    
+    addMessage(reteachMessage, 'tutor');
+    
+    if (isVoiceEnabled) {
+        speakText(reteachMessage);
+    }
+    
+    // Show reteach options
+    showReteachOptions(topic);
+}
+
+function showReteachOptions(topic) {
+    const chatContainer = document.getElementById('chat-messages');
+    const optionsDiv = document.createElement('div');
+    optionsDiv.className = 'alert alert-warning mt-2';
+    optionsDiv.innerHTML = `
+        <h6><i class="fas fa-redo"></i> Let's Try a Different Approach:</h6>
+        <div class="d-flex gap-2 flex-wrap">
+            <button class="btn btn-sm btn-outline-primary" onclick="reteachAt('basic', '${topic}')">
+                👶 Explain Like I'm 10
+            </button>
+            <button class="btn btn-sm btn-outline-success" onclick="reteachAt('visual', '${topic}')">
+                🎨 Show Me Examples
+            </button>
+            <button class="btn btn-sm btn-outline-info" onclick="reteachAt('practical', '${topic}')">
+                🔧 Real-World Applications
+            </button>
+        </div>
+    `;
+    chatContainer.appendChild(optionsDiv);
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+}
+
+function reteachAt(approach, topic) {
+    const reteachQuestions = {
+        'basic': `Explain ${topic} like I'm 10 years old with simple words`,
+        'visual': `Show me examples and analogies for ${topic}`,
+        'practical': `Give me real-world applications of ${topic}`
+    };
+    
+    document.getElementById('user-input').value = reteachQuestions[approach];
+    sendMessage();
+}
+
+function requestQuickAssessment() {
+    const assessmentQuestions = [
+        "Give me a quick quiz on the current topic",
+        "Test my understanding with a simple question",
+        "Can you check if I understand this concept?"
+    ];
+    
+    const randomQuestion = assessmentQuestions[Math.floor(Math.random() * assessmentQuestions.length)];
+    document.getElementById('user-input').value = randomQuestion;
+    sendMessage();
+}
+
+function requestPredictiveAssessment() {
+    const predictiveQuestions = [
+        "Give me a problem where I might make mistakes",
+        "Test me on something I usually get wrong",
+        "Challenge me with a tricky question"
+    ];
+    
+    const randomQuestion = predictiveQuestions[Math.floor(Math.random() * predictiveQuestions.length)];
+    document.getElementById('user-input').value = randomQuestion;
+    sendMessage();
+}
+
+// Real-time mistake prediction system
+function startAnswerTracking(question) {
+    currentQuestion = question;
+    answerStartTime = Date.now();
+    
+    // Show predictive hints based on question type
+    showPredictiveHints(question);
+}
+
+function showPredictiveHints(question) {
+    const questionLower = question.toLowerCase();
+    let predictedMistakes = [];
+    
+    // Predict mistakes based on question type and student history
+    if (questionLower.includes('force') || questionLower.includes('newton')) {
+        predictedMistakes = [
+            "⚠️ Watch out: Students often forget to consider direction in force problems",
+            "🧮 Common mistake: Confusing mass (kg) with weight (N)",
+            "📐 Remember: Draw a free body diagram first!"
+        ];
+    } else if (questionLower.includes('energy') || questionLower.includes('kinetic') || questionLower.includes('potential')) {
+        predictedMistakes = [
+            "⚠️ Watch out: Don't mix up kinetic energy (½mv²) and potential energy (mgh)",
+            "🔄 Common mistake: Forgetting energy conservation",
+            "📏 Remember: Check your units - energy is measured in Joules (J)"
+        ];
+    } else if (questionLower.includes('wave') || questionLower.includes('frequency')) {
+        predictedMistakes = [
+            "⚠️ Watch out: Students often confuse frequency (f) and period (T = 1/f)",
+            "📊 Common mistake: Mixing up wavelength and amplitude",
+            "🌊 Remember: Wave speed v = fλ (frequency × wavelength)"
+        ];
+    }
+    
+    // Show predictions if we have any
+    if (predictedMistakes.length > 0) {
+        showMistakePrediction(predictedMistakes[0], 75);
+    }
+}
+
+function showMistakePrediction(prediction, confidence) {
+    const alertDiv = document.getElementById('mistake-alerts');
+    const predictionText = document.getElementById('predicted-mistake');
+    const confidenceBar = document.getElementById('prediction-confidence');
+    
+    predictionText.textContent = prediction;
+    confidenceBar.style.width = confidence + '%';
+    confidenceBar.textContent = confidence + '%';
+    
+    alertDiv.style.display = 'block';
+    
+    // Update prediction confidence
+    predictionConfidence = confidence;
+    
+    // Auto-hide after 10 seconds
+    setTimeout(() => {
+        alertDiv.style.display = 'none';
+    }, 10000);
+}
+
+function analyzeStudentAnswer(question, answer) {
+    if (!question || !answer) return;
+    
+    const responseTime = answerStartTime ? (Date.now() - answerStartTime) / 1000 : 0;
+    
+    // Record answer in history
+    studentAnswerHistory.push({
+        question: question,
+        answer: answer,
+        responseTime: responseTime,
+        timestamp: Date.now()
+    });
+    
+    // Analyze for mistake patterns
+    const mistakeAnalysis = detectMistakePatterns(question, answer);
+    
+    // Predict future mistakes
+    if (mistakeAnalysis.hasError) {
+        predictFutureMistakes(mistakeAnalysis);
+        
+        // Show preventive intervention
+        showPreventiveIntervention(mistakeAnalysis);
+    }
+    
+    // Update mistake patterns
+    updateMistakePatterns(mistakeAnalysis);
+}
+
+function detectMistakePatterns(question, answer) {
+    const analysis = {
+        hasError: false,
+        errorType: 'none',
+        category: 'unknown',
+        confidence: 0
+    };
+    
+    const questionLower = question.toLowerCase();
+    const answerLower = answer.toLowerCase();
+    
+    // Common mistake detection patterns
+    if (questionLower.includes('force') && !answerLower.includes('newton') && !answerLower.includes('n')) {
+        if (answerLower.includes('kg') || answerLower.includes('mass')) {
+            analysis.hasError = true;
+            analysis.errorType = 'unit_confusion';
+            analysis.category = 'mass_weight_confusion';
+            analysis.confidence = 80;
+        }
+    }
+    
+    if (questionLower.includes('energy') && answerLower.includes('force')) {
+        analysis.hasError = true;
+        analysis.errorType = 'concept_confusion';
+        analysis.category = 'energy_force_mix';
+        analysis.confidence = 75;
+    }
+    
+    if (questionLower.includes('wave') && answerLower.includes('amplitude') && questionLower.includes('frequency')) {
+        analysis.hasError = true;
+        analysis.errorType = 'concept_confusion';
+        analysis.category = 'wave_property_mix';
+        analysis.confidence = 70;
+    }
+    
+    // Check for calculation errors (simple heuristic)
+    const hasNumbers = /\d/.test(answer);
+    const hasUnits = /[a-zA-Z]/.test(answer.replace(/\d/g, ''));
+    
+    if (hasNumbers && !hasUnits && !answerLower.includes('dimensionless')) {
+        analysis.hasError = true;
+        analysis.errorType = 'missing_units';
+        analysis.category = 'dimensional_analysis';
+        analysis.confidence = 85;
+    }
+    
+    return analysis;
+}
+
+function predictFutureMistakes(currentAnalysis) {
+    const predictions = [];
+    
+    // Predict based on current mistake type
+    switch (currentAnalysis.errorType) {
+        case 'unit_confusion':
+            predictions.push("You'll likely forget units in the next calculation problem");
+            predictions.push("Watch out for mass vs weight confusion in upcoming questions");
+            break;
+        case 'concept_confusion':
+            predictions.push("You might mix up similar physics concepts again");
+            predictions.push("Be careful with formula selection in the next problem");
+            break;
+        case 'missing_units':
+            predictions.push("Remember to include units in all your answers");
+            predictions.push("You'll probably need unit conversion in the next problem");
+            break;
+    }
+    
+    // Show the most relevant prediction
+    if (predictions.length > 0) {
+        showMistakePrediction(`🔮 Prediction: ${predictions[0]}`, currentAnalysis.confidence);
+    }
+}
+
+function showPreventiveIntervention(analysis) {
+    const interventions = {
+        'unit_confusion': {
+            message: "🛑 Hold on! I notice you might be confusing mass and weight. Remember: Mass is in kg, Weight (force) is in Newtons (N). Would you like me to clarify this?",
+            action: "clarify_mass_weight"
+        },
+        'concept_confusion': {
+            message: "🛑 Wait! It looks like you might be mixing up physics concepts. Let me help you choose the right approach for this problem.",
+            action: "concept_review"
+        },
+        'missing_units': {
+            message: "🛑 Don't forget units! In physics, every number needs units. What units should your answer have?",
+            action: "unit_reminder"
+        }
+    };
+    
+    const intervention = interventions[analysis.errorType];
+    if (intervention) {
+        // Add intervention message to chat
+        setTimeout(() => {
+            addMessage(intervention.message, 'tutor', 'predictive', 'intervention');
+            
+            if (isVoiceEnabled) {
+                speakText(intervention.message);
+            }
+        }, 1000);
+    }
+}
+
+function updateMistakePatterns(analysis) {
+    if (analysis.hasError) {
+        const errorType = analysis.errorType;
+        
+        if (mistakePatterns[errorType]) {
+            mistakePatterns[errorType]++;
+        } else {
+            mistakePatterns[errorType] = 1;
+        }
+        
+        // Update prediction confidence based on pattern frequency
+        const frequency = mistakePatterns[errorType];
+        const newConfidence = Math.min(95, 50 + (frequency * 10));
+        
+        document.getElementById('prediction-confidence').style.width = newConfidence + '%';
+        document.getElementById('prediction-confidence').textContent = newConfidence + '%';
+        
+        // Update prediction text
+        document.getElementById('prediction-text').textContent = 
+            `Detected ${frequency} similar mistake${frequency > 1 ? 's' : ''}. Prediction accuracy improving!`;
+    }
+}
+
+// Simulate understanding tracking (in real app, this would be more sophisticated)
+function simulateUnderstandingTracking(question, response) {
+    questionCount++;
+    
+    // Simple heuristic to estimate understanding
+    let score = understandingScore;
+    
+    if (question.includes('confused') || question.includes('don\'t understand')) {
+        score = Math.max(0, score - 20);
+    } else if (question.includes('got it') || question.includes('understand')) {
+        score = Math.min(100, score + 15);
+    } else if (question.includes('example') || question.includes('explain')) {
+        score = Math.min(100, score + 5);
+    }
+    
+    // Detect topic from question
+    const topics = ['force', 'energy', 'wave', 'electricity', 'heat', 'motion'];
+    const detectedTopic = topics.find(topic => question.includes(topic)) || currentTopic;
+    
+    updateUnderstandingProgress(detectedTopic, score);
+}
+
+// Enhanced sendMessage function with mistake prediction
+const originalSendMessage = sendMessage;
+sendMessage = function() {
+    const question = document.getElementById('user-input').value.trim();
+    
+    // Start tracking this question for mistake prediction
+    if (question.includes('?') || question.includes('calculate') || question.includes('find')) {
+        startAnswerTracking(question);
+    }
+    
+    originalSendMessage();
+    
+    // Track understanding and analyze patterns after sending message
+    setTimeout(() => {
+        simulateUnderstandingTracking(question, '');
+        
+        // If this looks like an answer to a previous question, analyze it
+        if (currentQuestion && !question.includes('?')) {
+            analyzeStudentAnswer(currentQuestion, question);
+        }
+    }, 1000);
+};
+
+// Auto-focus input on page load
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('user-input').focus();
+    
+    // Initialize understanding tracking
+    updateUnderstandingProgress('General Physics', 50);
+    
+    // Welcome message with voice
+    setTimeout(() => {
+        const welcomeMessage = "Welcome to Smart Physics Hub! I'm Engineer Clement Ekelemchi, your adaptive AI Physics Tutor. I can explain physics from basic level (like you're 10) to advanced Olympiad level. I'll track your understanding and adjust my explanations automatically. What would you like to learn today?";
+        
+        addMessage(welcomeMessage, 'tutor', 'adaptive', 'jamb');
+        
+        if (isVoiceEnabled) {
+            speakText(welcomeMessage);
+        }
+    }, 1000);
+});
+</script>
+{% endblock %}

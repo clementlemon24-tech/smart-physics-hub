@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Pest Tracker{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h1><i class="fas fa-tachometer-alt"></i> Pest Control Dashboard</h1>
+    </div>
+</div>
+
+<!-- Statistics Cards -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card bg-primary text-white">
+            <div class="card-body card-stat">
+                <div class="stat-number">{{ stats.total_locations }}</div>
+                <div>Total Locations</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-info text-white">
+            <div class="card-body card-stat">
+                <div class="stat-number">{{ stats.total_sightings }}</div>
+                <div>Total Sightings</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-warning text-white">
+            <div class="card-body card-stat">
+                <div class="stat-number">{{ stats.active_infestations }}</div>
+                <div>Active Infestations</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-danger text-white">
+            <div class="card-body card-stat">
+                <div class="stat-number">{{ stats.pending_treatments }}</div>
+                <div>Pending Treatments</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Active Infestations -->
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-exclamation-triangle"></i> Active Infestations</h5>
+            </div>
+            <div class="card-body">
+                {% if active_infestations %}
+                    {% for sighting in active_infestations %}
+                    <div class="alert alert-{% if sighting.severity.value == 'critical' %}danger{% elif sighting.severity.value == 'high' %}warning{% else %}info{% endif %}">
+                        <strong>{{ sighting.pest.name }}</strong> at {{ sighting.location.name }}
+                        <br><small>{{ sighting.sighting_date.strftime('%Y-%m-%d %H:%M') }} - {{ sighting.severity.value.title() }}</small>
+                        <br>{{ sighting.description }}
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <p class="text-muted">No active infestations</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Pending Treatments -->
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-clock"></i> Pending Treatments</h5>
+            </div>
+            <div class="card-body">
+                {% if pending_treatments %}
+                    {% for treatment in pending_treatments %}
+                    <div class="border-bottom pb-2 mb-2">
+                        <strong>{{ treatment.method }}</strong>
+                        <br><small>{{ treatment.pest_sighting.pest.name }} at {{ treatment.pest_sighting.location.name }}</small>
+                        <br><small>Scheduled: {{ treatment.scheduled_date.strftime('%Y-%m-%d') }}</small>
+                        <br><small>Cost: ${{ "%.2f"|format(treatment.cost) }}</small>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <p class="text-muted">No pending treatments</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-history"></i> Recent Sightings</h5>
+            </div>
+            <div class="card-body">
+                {% if recent_sightings %}
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Pest</th>
+                                    <th>Location</th>
+                                    <th>Severity</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for sighting in recent_sightings %}
+                                <tr>
+                                    <td>{{ sighting.sighting_date.strftime('%Y-%m-%d %H:%M') }}</td>
+                                    <td>{{ sighting.pest.name }}</td>
+                                    <td>{{ sighting.location.name }}</td>
+                                    <td><span class="severity-{{ sighting.severity.value }}">{{ sighting.severity.value.title() }}</span></td>
+                                    <td>{{ sighting.description }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <p class="text-muted">No recent sightings</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-plus"></i> Quick Actions</h5>
+            </div>
+            <div class="card-body">
+                <a href="{{ url_for('add_sighting') }}" class="btn btn-primary me-2">
+                    <i class="fas fa-eye"></i> Report Sighting
+                </a>
+                <a href="{{ url_for('add_location') }}" class="btn btn-secondary me-2">
+                    <i class="fas fa-map-marker-alt"></i> Add Location
+                </a>
+                <a href="{{ url_for('add_treatment') }}" class="btn btn-success">
+                    <i class="fas fa-medkit"></i> Schedule Treatment
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

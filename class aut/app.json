@@ -1,0 +1,43 @@
+{
+  "name": "Smart Physics Hub",
+  "description": "AI-powered physics learning platform with Engineer Clement Ekelemchi",
+  "repository": "https://github.com/yourusername/smart-physics-hub",
+  "logo": "https://cdn-icons-png.flaticon.com/512/3003/3003984.png",
+  "keywords": [
+    "physics",
+    "education",
+    "ai-tutor",
+    "jamb",
+    "waec",
+    "neco",
+    "learning",
+    "virtual-lab",
+    "nanophysics"
+  ],
+  "image": "heroku/python",
+  "buildpacks": [
+    {
+      "url": "heroku/python"
+    }
+  ],
+  "env": {
+    "SECRET_KEY": {
+      "description": "Secret key for Flask application",
+      "generator": "secret"
+    },
+    "FLASK_ENV": {
+      "description": "Flask environment",
+      "value": "production"
+    }
+  },
+  "formation": {
+    "web": {
+      "quantity": 1,
+      "size": "free"
+    }
+  },
+  "addons": [],
+  "scripts": {
+    "postdeploy": "echo 'Smart Physics Hub deployed successfully!'"
+  }
+}
